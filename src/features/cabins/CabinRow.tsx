@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 import { CabinType } from '../../types/cabin'
 import { formatCurrency } from '../../utils/helpers'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import Spinner from '../../ui/Spinner'
+import { deleteCabin } from '../../services/apiCabins'
+import Button from '../../ui/Button'
 
 type CabinRowType = {
 	cabin: CabinType
@@ -46,7 +50,33 @@ const Discount = styled.div`
 `
 
 function CabinRow({ cabin }: CabinRowType) {
-	const { image, name, regularPrice, discount, maxCapacity } = cabin
+	const {
+		id: cabinId,
+		image,
+		name,
+		regularPrice,
+		discount,
+		maxCapacity,
+	} = cabin
+
+	const queryClient = useQueryClient()
+
+	const { mutate: deleteCabinMutation, isPending } = useMutation({
+		mutationFn: deleteCabin,
+		onSuccess: () => {
+      alert('Success')
+			queryClient.invalidateQueries({
+				queryKey: ['cabins'],
+			})
+		},
+		onError: err => alert(err.message),
+	})
+
+	function handleDeleteCabin() {
+		deleteCabinMutation(cabinId)
+	}
+
+	if (isPending) return <Spinner />
 
 	return (
 		<TableRow role='row'>
@@ -55,8 +85,16 @@ function CabinRow({ cabin }: CabinRowType) {
 			<div>Количество персон: {maxCapacity}</div>
 			<Price>{formatCurrency(regularPrice)}</Price>
 			<Discount>{formatCurrency(discount)}</Discount>
-			<button>Удалить</button>
+			<Button
+				size='small'
+				variation='danger'
+				onClick={handleDeleteCabin}
+				disabled={isPending}
+			>
+				Удалить
+			</Button>
 		</TableRow>
 	)
 }
+
 export default CabinRow
