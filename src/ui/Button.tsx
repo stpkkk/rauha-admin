@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-type Props = {
+type ButtonProps = {
 	size: 'small' | 'medium' | 'large'
 	variation: 'primary' | 'secondary' | 'danger'
 }
@@ -53,7 +53,7 @@ const variations = {
 	`,
 }
 
-const Button = styled.button<Props>`
+const Button = styled.button<ButtonProps>`
 	border: none;
 	border-radius: var(--border-radius-sm);
 	box-shadow: var(--shadow-sm);
