@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Spinner from '../../ui/Spinner'
 import { deleteCabin } from '../../services/apiCabins'
 import Button from '../../ui/Button'
+import toast from 'react-hot-toast'
 
 type CabinRowType = {
 	cabin: CabinType
@@ -64,12 +65,13 @@ function CabinRow({ cabin }: CabinRowType) {
 	const { mutate: deleteCabinMutation, isPending } = useMutation({
 		mutationFn: deleteCabin,
 		onSuccess: () => {
-      alert('Success')
+			toast.success('Номер успешно удален!')
+
 			queryClient.invalidateQueries({
 				queryKey: ['cabins'],
 			})
 		},
-		onError: err => alert(err.message),
+		onError: err => toast.error(err.message),
 	})
 
 	function handleDeleteCabin() {

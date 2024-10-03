@@ -5,14 +5,12 @@ import Row from '../ui/Row'
 function Cabins() {
 	return (
 		<>
-			<Row type='horizontal'>
+			<Row>
 				<Heading as='h1'>Номера</Heading>
 				<p>Фильтрация / Сортировка</p>
 			</Row>
 
-			<Row>
-				<CabinTable />
-			</Row>
+			<CabinTable />
 		</>
 	)
 }
