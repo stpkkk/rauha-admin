@@ -17,13 +17,15 @@ function Cabins() {
 
 			<Row type='vertical'>
 				<CabinTable />
-				<Button
-					onClick={() => setShowForm(prev => !prev)}
-					variation='primary'
-					size='medium'
-				>
-					Добавить номер
-				</Button>
+				<div>
+					<Button
+						onClick={() => setShowForm(prev => !prev)}
+						variation='primary'
+						size='medium'
+					>
+						Добавить номер
+					</Button>
+				</div>
 			</Row>
 
 			{showForm && <CreateCabinForm />}

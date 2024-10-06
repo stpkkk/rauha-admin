@@ -1,59 +1,22 @@
-import styled from 'styled-components'
-
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
 import Button from '../../ui/Button'
 import FileInput from '../../ui/FileInput'
 import Textarea from '../../ui/Textarea'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import FormRow from '../../ui/FormRow'
 import { CabinType } from '../../types/cabin'
 import { createCabin } from '../../services/apiCabins'
-import toast from 'react-hot-toast'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import Spinner from '../../ui/Spinner'
-
-const FormRow = styled.div`
-	display: grid;
-	align-items: center;
-	grid-template-columns: 24rem 1fr 1.2fr;
-	gap: 2.4rem;
-
-	padding: 1.2rem 0;
-
-	&:first-child {
-		padding-top: 0;
-	}
-
-	&:last-child {
-		padding-bottom: 0;
-	}
-
-	&:not(:last-child) {
-		border-bottom: 1px solid var(--color-grey-100);
-	}
-
-	&:has(button) {
-		display: flex;
-		justify-content: flex-end;
-		gap: 1.2rem;
-	}
-`
-
-const Label = styled.label`
-	font-weight: 500;
-`
-
-// const Error = styled.span`
-// 	font-size: 1.4rem;
-// 	color: var(--color-red-700);
-// `
 
 function CreateCabinForm() {
 	const {
 		handleSubmit,
 		register,
+		getValues,
 		reset,
-		// formState: { errors },
+		formState: { errors },
 	} = useForm<CabinType>()
 
 	const queryClient = useQueryClient()
@@ -71,56 +34,107 @@ function CreateCabinForm() {
 		onError: err => toast.error(err.message),
 	})
 
-	const onSubmit: SubmitHandler<CabinType> = (data: CabinType) => {
+	function onSubmit(data: CabinType) {
 		createCabinMutation(data)
 	}
 
-	if (isCreating) return <Spinner />
+	const onError = (errors: any) => {
+		console.log('errors:', errors)
+	}
 
 	return (
-		<Form type='modal' onSubmit={handleSubmit(onSubmit)}>
-			<FormRow>
-				<Label htmlFor='name'>Название номера</Label>
-				<Input type='text' id='name' {...register('name')} />
-			</FormRow>
-
-			<FormRow>
-				<Label htmlFor='maxCapacity'>Количество персон</Label>
-				<Input type='number' id='maxCapacity' {...register('maxCapacity')} />
-			</FormRow>
-
-			<FormRow>
-				<Label htmlFor='regularPrice'>Стандартная цена</Label>
-				<Input type='number' id='regularPrice' {...register('regularPrice')} />
-			</FormRow>
-
-			<FormRow>
-				<Label htmlFor='discount'>Скидка</Label>
+		<Form type='modal' onSubmit={handleSubmit(onSubmit, onError)}>
+			<FormRow label='Название номера' error={errors?.name?.message} id='name'>
 				<Input
+					disabled={isCreating}
+					type='text'
+					id='name'
+					{...register('name', {
+						required: 'Это поле обязательно!',
+					})}
+				/>
+			</FormRow>
+
+			<FormRow
+				label='Количество персон'
+				error={errors?.maxCapacity?.message}
+				id='maxCapacity'
+			>
+				<Input
+					disabled={isCreating}
+					type='number'
+					id='maxCapacity'
+					{...register('maxCapacity', {
+						required: 'Это поле обязательно!',
+						min: {
+							value: 1,
+							message: 'Количество должно быть больше 1',
+						},
+					})}
+				/>
+			</FormRow>
+
+			<FormRow
+				label='Стандартная цена'
+				error={errors?.regularPrice?.message}
+				id='regularPrice'
+			>
+				<Input
+					disabled={isCreating}
+					type='number'
+					id='regularPrice'
+					{...register('regularPrice', {
+						required: 'Это поле обязательно!',
+						min: {
+							value: 1,
+							message: 'Количество должно быть больше 1',
+						},
+					})}
+				/>
+			</FormRow>
+
+			<FormRow label='Скидка' error={errors?.discount?.message} id='discount'>
+				<Input
+					disabled={isCreating}
 					type='number'
 					id='discount'
 					defaultValue={0}
-					{...register('discount')}
+					{...register('discount', {
+						required: 'Это поле обязательно!',
+						validate: (value: number) =>
+							+value <= +getValues().regularPrice ||
+							'Скидка должна быть меньше стандартной цены!',
+					})}
 				/>
 			</FormRow>
 
-			<FormRow>
-				<Label htmlFor='description'>Описание для сайта</Label>
+			<FormRow
+				label='Описание для сайта'
+				error={errors?.description?.message}
+				id='description'
+			>
 				<Textarea
+					disabled={isCreating}
 					id='description'
 					defaultValue=''
-					{...register('description')}
+					{...register('description', {
+						required: 'Это поле обязательно!',
+					})}
 				/>
 			</FormRow>
 
-			<FormRow>
-				<Label htmlFor='image'>Фото номера </Label>
+			<FormRow label='Фото номера'>
 				<FileInput id='image' accept='image/*' />
 			</FormRow>
 
 			<FormRow>
 				{/* type is an HTML attribute! */}
-				<Button variation='secondary' size='medium' type='reset'>
+				<Button
+					variation='secondary'
+					size='medium'
+					type='reset'
+					disabled={isCreating}
+				>
 					Отмена
 				</Button>
 				<Button variation='primary' size='medium' disabled={isCreating}>

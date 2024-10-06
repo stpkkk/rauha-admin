@@ -2,9 +2,10 @@ import { ReactNode } from 'react'
 import styled from 'styled-components'
 
 type FormRowProps = {
-	label: string
-	error: string
-	children: any
+	id?: string
+	label?: string
+	error?: string
+	children: ReactNode
 }
 
 const StyledFormRow = styled.div`
@@ -43,10 +44,10 @@ const Error = styled.span`
 	color: var(--color-red-700);
 `
 
-function FormRow({ label, error, children }: FormRowProps) {
+function FormRow({ label, error, children, id }: FormRowProps) {
 	return (
 		<StyledFormRow>
-			{label && <Label htmlFor={children.props.id}>{label}</Label>}
+			{label && <Label htmlFor={id}>{label}</Label>}
 			{children}
 			{error && <Error>{error}</Error>}
 		</StyledFormRow>
