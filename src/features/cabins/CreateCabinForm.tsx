@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { FieldErrors, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
@@ -35,10 +35,15 @@ function CreateCabinForm() {
 	})
 
 	function onSubmit(data: CabinType) {
-		createCabinMutation(data)
+		const imageFile = data.image.item(0)
+		if (imageFile) {
+			createCabinMutation({ ...data, image: imageFile })
+		} else {
+			toast.error('Please select an image file')
+		}
 	}
 
-	const onError = (errors: any) => {
+	const onError = (errors: FieldErrors<CabinType>) => {
 		console.log('errors:', errors)
 	}
 
@@ -124,7 +129,14 @@ function CreateCabinForm() {
 			</FormRow>
 
 			<FormRow label='Фото номера'>
-				<FileInput id='image' accept='image/*' />
+				<FileInput
+					id='image'
+					accept='image/*'
+					type='file'
+					{...register('image', {
+						required: 'Это поле обязательно!',
+					})}
+				/>
 			</FormRow>
 
 			<FormRow>

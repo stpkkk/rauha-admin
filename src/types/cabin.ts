@@ -6,5 +6,5 @@ export type CabinType = {
 	regularPrice: number
 	discount: number
 	description: string
-	image: string
+	image: any
 }
