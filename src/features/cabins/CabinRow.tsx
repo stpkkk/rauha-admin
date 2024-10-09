@@ -6,6 +6,8 @@ import Spinner from '../../ui/Spinner'
 import { deleteCabin } from '../../services/apiCabins'
 import Button from '../../ui/Button'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
+import CreateEditCabinForm from './CreateEditCabinForm'
 
 type CabinRowType = {
 	cabin: CabinType
@@ -51,6 +53,8 @@ const Discount = styled.div`
 `
 
 function CabinRow({ cabin }: CabinRowType) {
+	const [showForm, setShowForm] = useState(false)
+
 	const {
 		id: cabinId,
 		image,
@@ -81,21 +85,29 @@ function CabinRow({ cabin }: CabinRowType) {
 	if (isPending) return <Spinner />
 
 	return (
-		<TableRow role='row'>
-			<Img src={image} alt={name} />
-			<Cabin>{name}</Cabin>
-			<div>Количество персон: {maxCapacity}</div>
-			<Price>{formatCurrency(regularPrice)}</Price>
-			<Discount>{formatCurrency(discount)}</Discount>
-			<Button
-				size='small'
-				variation='danger'
-				onClick={handleDeleteCabin}
-				disabled={isPending}
-			>
-				Удалить
-			</Button>
-		</TableRow>
+		<>
+			<TableRow role='row'>
+				<Img src={image.toString()} alt={name} />
+				<Cabin>{name}</Cabin>
+				<div>Количество персон: {maxCapacity}</div>
+				<Price>{formatCurrency(regularPrice)}</Price>
+				<Discount>{formatCurrency(discount)}</Discount>
+				<div>
+					<button onClick={() => setShowForm(show => !show)}>
+						Редактировать
+					</button>
+					<Button
+						size='small'
+						variation='danger'
+						onClick={handleDeleteCabin}
+						disabled={isPending}
+					>
+						Удалить
+					</Button>
+				</div>
+			</TableRow>
+			{showForm && <CreateEditCabinForm cabinToEdit={cabin} />}
+		</>
 	)
 }
 

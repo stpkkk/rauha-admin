@@ -1,57 +1,88 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FieldErrors, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
 import Button from '../../ui/Button'
 import FileInput from '../../ui/FileInput'
 import Textarea from '../../ui/Textarea'
 import FormRow from '../../ui/FormRow'
+
 import { CabinType } from '../../types/cabin'
-import { createCabin } from '../../services/apiCabins'
+import { createCabin, updateCabin } from '../../services/apiCabins'
 
-function CreateCabinForm() {
-	const {
-		handleSubmit,
-		register,
-		getValues,
-		reset,
-		formState: { errors },
-	} = useForm<CabinType>()
+type Props = {
+	cabinToEdit?: CabinType
+}
 
+function CreateEditCabinForm({ cabinToEdit }: Props) {
 	const queryClient = useQueryClient()
+	const { id: editId, ...editedValues } = cabinToEdit || {}
+	const isEditSession = Boolean(editId)
+	const { register, handleSubmit, reset, getValues, formState } =
+		useForm<CabinType>({
+			defaultValues: editId ? editedValues : {},
+		})
+	const { errors } = formState
 
-	const { mutate: createCabinMutation, isPending: isCreating } = useMutation({
+	const createCabinMutation = useMutation({
 		mutationFn: createCabin,
 		onSuccess: () => {
-			toast.success('Номер успешно создан!')
-
-			queryClient.invalidateQueries({
-				queryKey: ['cabins'],
-			})
-			reset()
+			toast.success('New cabin created')
+			queryClient.invalidateQueries({ queryKey: ['cabins'] })
 		},
-		onError: err => toast.error(err.message),
+		onError: error => toast.error(error.message),
 	})
 
-	function onSubmit(data: CabinType) {
-		const imageFile = data.image.item(0)
-		if (imageFile) {
-			createCabinMutation({ ...data, image: imageFile })
+	const updateCabinMutation = useMutation({
+		mutationFn: updateCabin,
+		onSuccess: () => {
+			toast.success('Cabin updated')
+			queryClient.invalidateQueries({ queryKey: ['cabins'] })
+		},
+		onError: error => toast.error(error.message),
+	})
+
+	const { mutate, isPending } = editId
+		? updateCabinMutation
+		: createCabinMutation
+
+	const onSubmit = (data: CabinType) => {
+		if (!(data.image instanceof FileList) && typeof data.image !== 'string') {
+			return
+		}
+
+		if (editId) {
+			mutate(
+				{ ...data, id: editId },
+				{
+					onSuccess: () => {
+						reset()
+					},
+				}
+			)
 		} else {
-			toast.error('Please select an image file')
+			mutate(
+				{ ...data, image: data.image[0] },
+				{
+					onSuccess: () => {
+						reset()
+					},
+				}
+			)
 		}
 	}
 
-	const onError = (errors: FieldErrors<CabinType>) => {
-		console.log('errors:', errors)
+	const onError = (errors: any) => {
+		console.log(errors)
 	}
 
 	return (
 		<Form type='modal' onSubmit={handleSubmit(onSubmit, onError)}>
 			<FormRow label='Название номера' error={errors?.name?.message} id='name'>
 				<Input
-					disabled={isCreating}
+					disabled={isPending}
 					type='text'
 					id='name'
 					{...register('name', {
@@ -66,7 +97,7 @@ function CreateCabinForm() {
 				id='maxCapacity'
 			>
 				<Input
-					disabled={isCreating}
+					disabled={isPending}
 					type='number'
 					id='maxCapacity'
 					{...register('maxCapacity', {
@@ -85,7 +116,7 @@ function CreateCabinForm() {
 				id='regularPrice'
 			>
 				<Input
-					disabled={isCreating}
+					disabled={isPending}
 					type='number'
 					id='regularPrice'
 					{...register('regularPrice', {
@@ -100,7 +131,7 @@ function CreateCabinForm() {
 
 			<FormRow label='Скидка' error={errors?.discount?.message} id='discount'>
 				<Input
-					disabled={isCreating}
+					disabled={isPending}
 					type='number'
 					id='discount'
 					defaultValue={0}
@@ -119,7 +150,7 @@ function CreateCabinForm() {
 				id='description'
 			>
 				<Textarea
-					disabled={isCreating}
+					disabled={isPending}
 					id='description'
 					defaultValue=''
 					{...register('description', {
@@ -134,7 +165,7 @@ function CreateCabinForm() {
 					accept='image/*'
 					type='file'
 					{...register('image', {
-						required: 'Это поле обязательно!',
+						required: isEditSession ? false : 'Это поле обязательно!',
 					})}
 				/>
 			</FormRow>
@@ -145,16 +176,16 @@ function CreateCabinForm() {
 					variation='secondary'
 					size='medium'
 					type='reset'
-					disabled={isCreating}
+					disabled={isPending}
 				>
 					Отмена
 				</Button>
-				<Button variation='primary' size='medium' disabled={isCreating}>
-					Создать номер
+				<Button variation='primary' size='medium' disabled={isPending}>
+					{isEditSession ? 'Редактировать номер' : 'Создать новый номер'}
 				</Button>
 			</FormRow>
 		</Form>
 	)
 }
 
-export default CreateCabinForm
+export default CreateEditCabinForm
