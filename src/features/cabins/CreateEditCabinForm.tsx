@@ -1,70 +1,56 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
-
+import { useCreateCabin } from './useCreateCabin'
+import { useEditCabin } from './useEditCabin'
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
 import Button from '../../ui/Button'
 import FileInput from '../../ui/FileInput'
 import Textarea from '../../ui/Textarea'
 import FormRow from '../../ui/FormRow'
-
 import { CabinType } from '../../types/cabin'
-import { createCabin, updateCabin } from '../../services/apiCabins'
 
 type Props = {
 	cabinToEdit?: CabinType
 }
 
 function CreateEditCabinForm({ cabinToEdit }: Props) {
-	const queryClient = useQueryClient()
 	const { id: editId, ...editedValues } = cabinToEdit || {}
 	const isEditSession = Boolean(editId)
 	const { register, handleSubmit, reset, getValues, formState } =
 		useForm<CabinType>({
-			defaultValues: editId ? editedValues : {},
+			defaultValues: isEditSession ? editedValues : {},
 		})
 	const { errors } = formState
 
-	const createCabinMutation = useMutation({
-		mutationFn: createCabin,
-		onSuccess: () => {
-			toast.success('New cabin created')
-			queryClient.invalidateQueries({ queryKey: ['cabins'] })
-		},
-		onError: error => toast.error(error.message),
-	})
+	const createCabinMutation = useCreateCabin()
+	const updateCabinMutation = useEditCabin()
 
-	const updateCabinMutation = useMutation({
-		mutationFn: updateCabin,
-		onSuccess: () => {
-			toast.success('Cabin updated')
-			queryClient.invalidateQueries({ queryKey: ['cabins'] })
-		},
-		onError: error => toast.error(error.message),
-	})
-
-	const { mutate, isPending } = editId
+	const { mutate, isPending } = isEditSession
 		? updateCabinMutation
 		: createCabinMutation
 
-	const onSubmit = (data: CabinType) => {
-		if (!(data.image instanceof FileList) && typeof data.image !== 'string') {
+	const onSubmit = (formData: CabinType) => {
+		if (
+			!(formData.image instanceof FileList) &&
+			typeof formData.image !== 'string'
+		) {
 			return
 		}
 
-		if (editId) {
+		if (isEditSession) {
 			mutate(
-				{ ...data, id: editId },
+				{ ...formData, id: editId },
+				//reset inputs on success, also we can get data from Tanstack Query
 				{
-					onSuccess: () => {
+					onSuccess: data => {
+						console.log('data:', data)
 						reset()
 					},
 				}
 			)
 		} else {
 			mutate(
-				{ ...data, image: data.image[0] },
+				{ ...formData, image: formData.image[0] },
 				{
 					onSuccess: () => {
 						reset()
@@ -74,7 +60,7 @@ function CreateEditCabinForm({ cabinToEdit }: Props) {
 		}
 	}
 
-	const onError = (errors: any) => {
+	const onError = (errors: Record<string, any>) => {
 		console.log(errors)
 	}
 
@@ -145,7 +131,7 @@ function CreateEditCabinForm({ cabinToEdit }: Props) {
 			</FormRow>
 
 			<FormRow
-				label='Описание для сайта'
+				label='Описание для номера'
 				error={errors?.description?.message}
 				id='description'
 			>

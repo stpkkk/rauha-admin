@@ -1,9 +1,8 @@
 import supabase, { supabaseUrl } from './supabase'
 import { CabinType } from '../types/cabin'
 
-//order('created_at', { ascending: true }) - This approach guarantees that when a cabin is edited, it maintains its relative position in the table based on its original creation time, rather than being automatically shifted to the last position
-
 export async function getCabins() {
+	// Get the current cabin data
 	const { data, error } = await supabase
 		.from('cabins')
 		.select('*')
@@ -57,7 +56,7 @@ export const createCabin = async (newCabin: CabinType) => {
 }
 
 export const updateCabin = async (cabin: CabinType) => {
-	if (!cabin.id) {
+  if (!cabin.id) {
 		throw new Error('Cabin ID is required for update')
 	}
 
@@ -76,8 +75,11 @@ export const updateCabin = async (cabin: CabinType) => {
 	}
 
 	// Handle image update
-	if (cabin.image instanceof FileList && cabin.image.length > 0) {
-		const file = cabin.image[0]
+	if (
+		cabin.image instanceof File ||
+		(cabin.image instanceof FileList && cabin.image.length > 0)
+	) {
+		const file = cabin.image instanceof File ? cabin.image : cabin.image[0]
 		const imageName = `${Math.random()}-${file.name}`.replace('/', '')
 		const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`
 
@@ -96,13 +98,21 @@ export const updateCabin = async (cabin: CabinType) => {
 		// Delete the old image if it exists and is different from the new one
 		if (currentCabin.image && currentCabin.image !== imagePath) {
 			const oldImageName = currentCabin.image.split('/').pop()
-			await supabase.storage.from('cabin-images').remove([oldImageName])
+			if (oldImageName) {
+				const { error: deleteError } = await supabase.storage
+					.from('cabin-images')
+					.remove([oldImageName])
+
+				if (deleteError) {
+					console.error('Failed to delete old image:', deleteError)
+				}
+			}
 		}
 	} else if (typeof cabin.image === 'string') {
 		// If it's a string (URL), keep it as is
 		dataToUpdate.image = cabin.image
 	} else {
-		// If it's neither a FileList nor a string, remove it from the update
+		// If it's neither a File, FileList, nor a string, remove it from the update
 		delete dataToUpdate.image
 	}
 

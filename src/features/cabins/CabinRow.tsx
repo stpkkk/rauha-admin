@@ -1,15 +1,15 @@
-import styled from 'styled-components'
-import { CabinType } from '../../types/cabin'
-import { formatCurrency } from '../../utils/helpers'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import Spinner from '../../ui/Spinner'
-import { deleteCabin } from '../../services/apiCabins'
-import Button from '../../ui/Button'
-import toast from 'react-hot-toast'
 import { useState } from 'react'
+import styled from 'styled-components'
 import CreateEditCabinForm from './CreateEditCabinForm'
+import { useDeleteCabin } from './useDeleteCabin'
+import Spinner from '../../ui/Spinner'
+import { formatCurrency } from '../../utils/helpers'
+import { CabinType } from '../../types/cabin'
+import { HiSquare2Stack } from 'react-icons/hi2'
+import { HiPencil, HiTrash } from 'react-icons/hi'
+import { useCreateCabin } from './useCreateCabin'
 
-type CabinRowType = {
+type Props = {
 	cabin: CabinType
 }
 
@@ -52,8 +52,11 @@ const Discount = styled.div`
 	color: var(--color-green-700);
 `
 
-function CabinRow({ cabin }: CabinRowType) {
+function CabinRow({ cabin }: Props) {
 	const [showForm, setShowForm] = useState(false)
+	const { isDeleting, deleteCabinMutation } = useDeleteCabin()
+	const { mutate: createCabinMutation, isPending: isCreating } =
+		useCreateCabin()
 
 	const {
 		id: cabinId,
@@ -62,27 +65,40 @@ function CabinRow({ cabin }: CabinRowType) {
 		regularPrice,
 		discount,
 		maxCapacity,
+		description,
 	} = cabin
 
-	const queryClient = useQueryClient()
+	async function handleDuplicateCabin() {
+		try {
+			// Fetch the image as a blob
+			const response = await fetch(image.toString())
+			const blob = await response.blob()
 
-	const { mutate: deleteCabinMutation, isPending } = useMutation({
-		mutationFn: deleteCabin,
-		onSuccess: () => {
-			toast.success('Номер успешно удален!')
+			// Create a new File object with a unique name
+			const fileName = `${Date.now()}-${name
+				.replace(/\s+/g, '-')
+				.toLowerCase()}.${blob.type.split('/')[1]}`
+			const imageFile = new File([blob], fileName, { type: blob.type })
 
-			queryClient.invalidateQueries({
-				queryKey: ['cabins'],
+			// Create the new cabin with the new image file
+			createCabinMutation({
+				name: `Копия ${name}`,
+				image: imageFile,
+				regularPrice,
+				discount,
+				maxCapacity,
+				description,
 			})
-		},
-		onError: err => toast.error(err.message),
-	})
+		} catch (error) {
+			console.error('Error duplicating cabin:', error)
+		}
+	}
 
 	function handleDeleteCabin() {
 		deleteCabinMutation(cabinId)
 	}
 
-	if (isPending) return <Spinner />
+	if (isDeleting) return <Spinner />
 
 	return (
 		<>
@@ -91,19 +107,21 @@ function CabinRow({ cabin }: CabinRowType) {
 				<Cabin>{name}</Cabin>
 				<div>Количество персон: {maxCapacity}</div>
 				<Price>{formatCurrency(regularPrice)}</Price>
-				<Discount>{formatCurrency(discount)}</Discount>
+				{discount ? (
+					<Discount>{formatCurrency(discount)}</Discount>
+				) : (
+					<span>&mdash;</span>
+				)}
 				<div>
-					<button onClick={() => setShowForm(show => !show)}>
-						Редактировать
+					<button onClick={handleDuplicateCabin} disabled={isCreating}>
+						<HiSquare2Stack />
 					</button>
-					<Button
-						size='small'
-						variation='danger'
-						onClick={handleDeleteCabin}
-						disabled={isPending}
-					>
-						Удалить
-					</Button>
+					<button onClick={() => setShowForm(show => !show)}>
+						<HiPencil />
+					</button>
+					<button onClick={handleDeleteCabin} disabled={isDeleting}>
+						<HiTrash />
+					</button>
 				</div>
 			</TableRow>
 			{showForm && <CreateEditCabinForm cabinToEdit={cabin} />}
