@@ -1,4 +1,4 @@
-export type SettingsType = {
+export type SettingType = {
 	id?: number
 	created_at?: Date
 	minBookingLength: number
