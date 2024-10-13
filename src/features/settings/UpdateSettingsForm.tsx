@@ -1,3 +1,4 @@
+import { SettingType } from '../../types/setting'
 import Form from '../../ui/Form'
 import FormRow from '../../ui/FormRow'
 import Input from '../../ui/Input'
@@ -18,17 +19,17 @@ function UpdateSettingsForm() {
 	} = useSettings()
 	const { isUpdating, updateSettingMutation } = useUpdateSetting()
 
-	function handleUpdate(e: React.FocusEvent<HTMLInputElement>, field: string) {
+	function handleUpdate(
+		e: React.FocusEvent<HTMLInputElement>,
+		field: keyof SettingType
+	) {
 		const { value } = e.target
 
 		if (!value) return
+
 		updateSettingMutation({
-			[field]: value,
-			minBookingLength: 0,
-			maxBookingLength: 0,
-			maxGuestsPerBooking: 0,
-			breakfastPrice: 0,
-		})
+			[field]: +value,
+		} as SettingType)
 	}
 
 	if (isPending) return <Spinner />
