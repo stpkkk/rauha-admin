@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { useCreateCabin } from './useCreateCabin'
-import { useEditCabin } from './useEditCabin'
+import { useUpdateCabin } from './useUpdateCabin'
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
 import Button from '../../ui/Button'
@@ -10,22 +10,22 @@ import FormRow from '../../ui/FormRow'
 import { CabinType } from '../../types/cabin'
 
 type Props = {
-	cabinToEdit?: CabinType
+	cabinToUpdate?: CabinType
 }
 
-function CreateEditCabinForm({ cabinToEdit }: Props) {
-	const { id: editId, ...editedValues } = cabinToEdit || {}
-	const isEditSession = Boolean(editId)
+function CreateUpdateCabinForm({ cabinToUpdate }: Props) {
+	const { id: updateId, ...updateedValues } = cabinToUpdate || {}
+	const isUpdateSession = Boolean(updateId)
 	const { register, handleSubmit, reset, getValues, formState } =
 		useForm<CabinType>({
-			defaultValues: isEditSession ? editedValues : {},
+			defaultValues: isUpdateSession ? updateedValues : {},
 		})
 	const { errors } = formState
 
 	const createCabinMutation = useCreateCabin()
-	const updateCabinMutation = useEditCabin()
+	const updateCabinMutation = useUpdateCabin()
 
-	const { mutate, isPending } = isEditSession
+	const { mutate, isPending } = isUpdateSession
 		? updateCabinMutation
 		: createCabinMutation
 
@@ -37,9 +37,9 @@ function CreateEditCabinForm({ cabinToEdit }: Props) {
 			return
 		}
 
-		if (isEditSession) {
+		if (isUpdateSession) {
 			mutate(
-				{ ...formData, id: editId },
+				{ ...formData, id: updateId },
 				//reset inputs on success, also we can get data from Tanstack Query
 				{
 					onSuccess: data => {
@@ -151,7 +151,7 @@ function CreateEditCabinForm({ cabinToEdit }: Props) {
 					accept='image/*'
 					type='file'
 					{...register('image', {
-						required: isEditSession ? false : 'Это поле обязательно!',
+						required: isUpdateSession ? false : 'Это поле обязательно!',
 					})}
 				/>
 			</FormRow>
@@ -167,11 +167,11 @@ function CreateEditCabinForm({ cabinToEdit }: Props) {
 					Отмена
 				</Button>
 				<Button variation='primary' size='medium' disabled={isPending}>
-					{isEditSession ? 'Редактировать номер' : 'Создать новый номер'}
+					{isUpdateSession ? 'Редактировать номер' : 'Создать новый номер'}
 				</Button>
 			</FormRow>
 		</Form>
 	)
 }
 
-export default CreateEditCabinForm
+export default CreateUpdateCabinForm

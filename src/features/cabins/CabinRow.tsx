@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import CreateEditCabinForm from './CreateEditCabinForm'
+import CreateUpdateCabinForm from './CreateUpdateCabinForm'
 import { useDeleteCabin } from './useDeleteCabin'
 import Spinner from '../../ui/Spinner'
 import { formatCurrency } from '../../utils/helpers'
@@ -124,7 +124,7 @@ function CabinRow({ cabin }: Props) {
 					</button>
 				</div>
 			</TableRow>
-			{showForm && <CreateEditCabinForm cabinToEdit={cabin} />}
+			{showForm && <CreateUpdateCabinForm cabinToUpdate={cabin} />}
 		</>
 	)
 }
