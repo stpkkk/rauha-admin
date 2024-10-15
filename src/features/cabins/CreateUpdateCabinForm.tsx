@@ -1,3 +1,5 @@
+// onClick={() => onCloseModal?.()} - conditional call of function if handleCloseModal didn`t exist it will not be called and not create a bug
+
 import { useForm } from 'react-hook-form'
 import { useCreateCabin } from './useCreateCabin'
 import { useUpdateCabin } from './useUpdateCabin'
@@ -11,14 +13,15 @@ import { CabinType } from '../../types/cabin'
 
 type Props = {
 	cabinToUpdate?: CabinType
+	onCloseModal?: () => void
 }
 
-function CreateUpdateCabinForm({ cabinToUpdate }: Props) {
-	const { id: updateId, ...updateedValues } = cabinToUpdate || {}
+function CreateUpdateCabinForm({ cabinToUpdate, onCloseModal }: Props) {
+	const { id: updateId, ...updatedValues } = cabinToUpdate || {}
 	const isUpdateSession = Boolean(updateId)
 	const { register, handleSubmit, reset, getValues, formState } =
 		useForm<CabinType>({
-			defaultValues: isUpdateSession ? updateedValues : {},
+			defaultValues: isUpdateSession ? updatedValues : {},
 		})
 	const { errors } = formState
 
@@ -37,14 +40,18 @@ function CreateUpdateCabinForm({ cabinToUpdate }: Props) {
 			return
 		}
 
+		onCloseModal
+
 		if (isUpdateSession) {
 			mutate(
 				{ ...formData, id: updateId },
 				//reset inputs on success, also we can get data from Tanstack Query
+
 				{
 					onSuccess: data => {
 						console.log('data:', data)
 						reset()
+						onCloseModal?.()
 					},
 				}
 			)
@@ -54,6 +61,7 @@ function CreateUpdateCabinForm({ cabinToUpdate }: Props) {
 				{
 					onSuccess: () => {
 						reset()
+						onCloseModal?.()
 					},
 				}
 			)
@@ -65,7 +73,10 @@ function CreateUpdateCabinForm({ cabinToUpdate }: Props) {
 	}
 
 	return (
-		<Form type='modal' onSubmit={handleSubmit(onSubmit, onError)}>
+		<Form
+			type={onCloseModal ? 'modal' : 'regular'}
+			onSubmit={handleSubmit(onSubmit, onError)}
+		>
 			<FormRow label='Название номера' error={errors?.name?.message} id='name'>
 				<Input
 					disabled={isPending}
@@ -159,6 +170,7 @@ function CreateUpdateCabinForm({ cabinToUpdate }: Props) {
 			<FormRow>
 				{/* type is an HTML attribute! */}
 				<Button
+					onClick={() => onCloseModal?.()}
 					variation='secondary'
 					size='medium'
 					type='reset'
