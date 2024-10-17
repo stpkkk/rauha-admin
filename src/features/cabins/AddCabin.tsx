@@ -6,11 +6,11 @@ function AddCabin() {
 	return (
 		<Modal>
 			<Modal.Open opens='cabin-form'>
-				<Button>Добавить номер</Button>
+				{openModal => <Button onClick={openModal}>Добавить номер</Button>}
 			</Modal.Open>
 
 			<Modal.Window name='cabin-form'>
-				<CreateUpdateCabinForm />
+				{closeModal => <CreateUpdateCabinForm onCloseModal={closeModal} />}
 			</Modal.Window>
 		</Modal>
 	)

@@ -1,13 +1,4 @@
-import {
-	cloneElement,
-	createContext,
-	Dispatch,
-	ReactElement,
-	ReactNode,
-	SetStateAction,
-	useContext,
-	useState,
-} from 'react'
+import { createContext, ReactNode, useContext, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { HiXMark } from 'react-icons/hi2'
 import styled from 'styled-components'
@@ -17,19 +8,20 @@ type ModalProps = {
 }
 
 type OpenProps = {
-	children: ReactElement
+	children: (openModal: () => void) => ReactNode
 	opens: string
 }
 
 type WindowProps = {
-	children: ReactElement
+	children: (closeModal: () => void) => ReactNode
 	name: string
 }
 
 type ModalContextType = {
 	openName: string
 	close: () => void
-	open: Dispatch<SetStateAction<string>>
+	open: (name: string) => void
+	isOpen: (name: string) => boolean
 }
 
 const StyledModal = styled.div`
@@ -84,9 +76,10 @@ const Modal = ({ children }: ModalProps) => {
 	const [openName, setOpenName] = useState('')
 	const close = () => setOpenName('')
 	const open = setOpenName
+	const isOpen = (name: string) => name === openName
 
 	return (
-		<ModalContext.Provider value={{ openName, close, open }}>
+		<ModalContext.Provider value={{ openName, close, open, isOpen }}>
 			{children}
 		</ModalContext.Provider>
 	)
@@ -97,15 +90,15 @@ const Open = ({ children, opens: opensWindowName }: OpenProps) => {
 	if (!context) throw new Error('Open must be used within a Modal')
 
 	const { open } = context
-	return cloneElement(children, { onClick: () => open(opensWindowName) })
+	return children(() => open(opensWindowName))
 }
 
 const Window = ({ children, name }: WindowProps) => {
 	const context = useContext(ModalContext)
 	if (!context) throw new Error('Window must be used within a Modal')
-	const { openName, close } = context
+	const { isOpen, close } = context
 
-	if (name !== openName) return null
+	if (!isOpen(name)) return null
 
 	return createPortal(
 		<Overlay>
@@ -113,8 +106,7 @@ const Window = ({ children, name }: WindowProps) => {
 				<Button onClick={close}>
 					<HiXMark />
 				</Button>
-
-				<div>{cloneElement(children, { onCloseModal: close })}</div>
+				<div>{children(close)}</div>
 			</StyledModal>
 		</Overlay>,
 		document.body
