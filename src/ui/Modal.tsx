@@ -1,7 +1,8 @@
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { createContext, ReactNode, useContext, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { HiXMark } from 'react-icons/hi2'
 import styled from 'styled-components'
+import { useClickOutside } from '../hooks/useClickOutside'
 
 type ModalProps = {
 	children: ReactNode
@@ -95,14 +96,17 @@ const Open = ({ children, opens: opensWindowName }: OpenProps) => {
 
 const Window = ({ children, name }: WindowProps) => {
 	const context = useContext(ModalContext)
+	const modalRef = useRef<HTMLDivElement>(null)
+
 	if (!context) throw new Error('Window must be used within a Modal')
 	const { isOpen, close } = context
+	useClickOutside(modalRef, close)
 
 	if (!isOpen(name)) return null
 
 	return createPortal(
 		<Overlay>
-			<StyledModal>
+			<StyledModal ref={modalRef}>
 				<Button onClick={close}>
 					<HiXMark />
 				</Button>
