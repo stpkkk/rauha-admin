@@ -99,10 +99,10 @@ const Window = ({ children, name }: WindowProps) => {
 	const modalRef = useRef<HTMLDivElement>(null)
 
 	if (!context) throw new Error('Window must be used within a Modal')
-	const { isOpen, close } = context
+	const { openName, close } = context
 	useClickOutside(modalRef, close)
 
-	if (!isOpen(name)) return null
+	if (name !== openName) return null
 
 	return createPortal(
 		<Overlay>
