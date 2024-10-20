@@ -9,11 +9,22 @@ import { HiPencil, HiTrash } from 'react-icons/hi'
 import Modal from '../../ui/Modal'
 import ConfirmDelete from '../../ui/ConfirmDelete'
 import CreateUpdateCabinForm from './CreateUpdateCabinForm'
-import Table from '../../ui/Table'
 
 type Props = {
 	cabin: CabinType
 }
+
+const TableRow = styled.div`
+	display: grid;
+	grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+	column-gap: 2.4rem;
+	align-items: center;
+	padding: 1.4rem 2.4rem;
+
+	&:not(:last-child) {
+		border-bottom: 1px solid var(--color-grey-100);
+	}
+`
 
 const Img = styled.img`
 	display: block;
@@ -86,7 +97,7 @@ function CabinRow({ cabin }: Props) {
 	if (isDeleting) return <Spinner />
 
 	return (
-		<Table.Row>
+		<TableRow role='row'>
 			<Img src={image.toString()} alt={name} />
 			<Cabin>{name}</Cabin>
 			<div>Количество персон: {maxCapacity}</div>
@@ -137,7 +148,7 @@ function CabinRow({ cabin }: Props) {
 					</Modal.Window>
 				</Modal>
 			</div>
-		</Table.Row>
+		</TableRow>
 	)
 }
 
