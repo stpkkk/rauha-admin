@@ -1,13 +1,19 @@
 import { createContext, ReactNode, useContext } from 'react'
 import styled from 'styled-components'
+import { CabinType } from '../types/cabin'
 
 type TableContextType = {
 	columns: string
 }
 
-type Props = {
+type TableProps = {
 	children: ReactNode
 	columns?: string
+}
+
+type TableBodyProps = {
+	data: CabinType[]
+	render: (item: CabinType) => ReactNode
 }
 
 const StyledTable = styled.div`
@@ -69,7 +75,7 @@ const Empty = styled.p`
 
 const TableContext = createContext<TableContextType | null>(null)
 
-const Table = ({ columns = '', children }: Props) => {
+const Table = ({ columns = '', children }: TableProps) => {
 	return (
 		<TableContext.Provider value={{ columns }}>
 			<StyledTable role='table'>{children}</StyledTable>
@@ -99,8 +105,10 @@ function Row({ children }: { children: ReactNode }) {
 	)
 }
 
-function Body({ children }: { children: ReactNode }) {
-	// return <StyledBody>{children}</StyledBody>
+function Body({ data, render }: TableBodyProps) {
+	if (!data.length) return <Empty>Нет данных</Empty>
+
+	return <StyledBody>{data.map(render)}</StyledBody>
 }
 
 Table.Header = Header
