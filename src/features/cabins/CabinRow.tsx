@@ -10,6 +10,7 @@ import Modal from '../../ui/Modal'
 import ConfirmDelete from '../../ui/ConfirmDelete'
 import CreateUpdateCabinForm from './CreateUpdateCabinForm'
 import Table from '../../ui/Table'
+import Menus from '../../ui/Menus'
 
 type Props = {
 	cabin: CabinType
@@ -44,8 +45,7 @@ const Discount = styled.div`
 
 function CabinRow({ cabin }: Props) {
 	const { isDeleting, deleteCabinMutation } = useDeleteCabin()
-	const { mutate: createCabinMutation, isPending: isCreating } =
-		useCreateCabin()
+	const { mutate: createCabinMutation } = useCreateCabin()
 
 	const {
 		id: cabinId,
@@ -87,9 +87,9 @@ function CabinRow({ cabin }: Props) {
 
 	return (
 		<Table.Row>
-			<Img src={image.toString()} alt={name} />
+			<Img src={image.toString()} />
 			<Cabin>{name}</Cabin>
-			<div>Количество персон: {maxCapacity}</div>
+			<div>Fits up to {maxCapacity} guests</div>
 			<Price>{formatCurrency(regularPrice)}</Price>
 			{discount ? (
 				<Discount>{formatCurrency(discount)}</Discount>
@@ -97,44 +97,55 @@ function CabinRow({ cabin }: Props) {
 				<span>&mdash;</span>
 			)}
 			<div>
-				<button onClick={handleDuplicateCabin} disabled={isCreating}>
-					<HiSquare2Stack />
-				</button>
-
 				<Modal>
-					<Modal.Open opens='edit'>
-						{openModal => (
-							<button onClick={openModal}>
-								<HiPencil />
-							</button>
-						)}
-					</Modal.Open>
-					<Modal.Window name='edit'>
-						{closeModal => (
-							<CreateUpdateCabinForm
-								cabinToUpdate={cabin}
-								onCloseModal={closeModal}
-							/>
-						)}
-					</Modal.Window>
+					<Menus.Menu>
+						<Menus.Toggle id={cabinId?.toString()} />
 
-					<Modal.Open opens='delete'>
-						{openModal => (
-							<button onClick={openModal}>
-								<HiTrash />
-							</button>
-						)}
-					</Modal.Open>
-					<Modal.Window name='delete'>
-						{closeModal => (
-							<ConfirmDelete
-								resourceName='номер'
-								disabled={isDeleting}
-								onConfirm={() => deleteCabinMutation(cabinId)}
-								onCloseModal={closeModal}
-							/>
-						)}
-					</Modal.Window>
+						<Menus.List id={cabinId?.toString()}>
+							<Menus.Button
+								onClick={handleDuplicateCabin}
+								icon={<HiSquare2Stack />}
+							>
+								<span>Копировать</span>
+							</Menus.Button>
+
+							<Modal.Open opens='edit'>
+								{openModal => (
+									<Menus.Button icon={<HiPencil />} onClick={openModal}>
+										<span>Редактировать</span>
+									</Menus.Button>
+								)}
+							</Modal.Open>
+
+							<Modal.Open opens='delete'>
+								{openModal => (
+									<Menus.Button icon={<HiTrash />} onClick={openModal}>
+										<span>Удалить</span>
+									</Menus.Button>
+								)}
+							</Modal.Open>
+						</Menus.List>
+
+						<Modal.Window name='edit'>
+							{closeModal => (
+								<CreateUpdateCabinForm
+									cabinToUpdate={cabin}
+									onCloseModal={closeModal}
+								/>
+							)}
+						</Modal.Window>
+
+						<Modal.Window name='delete'>
+							{closeModal => (
+								<ConfirmDelete
+									resourceName='номер'
+									disabled={isDeleting}
+									onConfirm={() => deleteCabinMutation(cabinId)}
+									onCloseModal={closeModal}
+								/>
+							)}
+						</Modal.Window>
+					</Menus.Menu>
 				</Modal>
 			</div>
 		</Table.Row>
@@ -142,3 +153,5 @@ function CabinRow({ cabin }: Props) {
 }
 
 export default CabinRow
+
+	
