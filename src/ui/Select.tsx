@@ -1,12 +1,18 @@
-import { ReactNode } from 'react'
+import { ChangeEvent } from 'react'
 import styled from 'styled-components'
 
-type Props = {
+type SelectProps = {
+	onChange: (event: ChangeEvent<HTMLSelectElement>) => void
+	value?: string
 	type: 'white'
-	children: ReactNode
+	options: { value: string; label: string }[]
 }
 
-const StyledSelect = styled.select<Props>`
+type StyledSelectProps = {
+	type: 'white'
+}
+
+const StyledSelect = styled.select<StyledSelectProps>`
 	font-size: 1.4rem;
 	padding: 0.8rem 1.2rem;
 	border: 1px solid
@@ -20,8 +26,16 @@ const StyledSelect = styled.select<Props>`
 	box-shadow: var(--shadow-sm);
 `
 
-const Select = ({ children, type }: Props) => {
-	return <StyledSelect type={type}>{children}</StyledSelect>
+const Select = ({ options, onChange, value, ...props }: SelectProps) => {
+	return (
+		<StyledSelect value={value} onChange={onChange} {...props}>
+			{options.map(option => (
+				<option value={option.value} key={option.value}>
+					{option.label}
+				</option>
+			))}
+		</StyledSelect>
+	)
 }
 
 export default Select
