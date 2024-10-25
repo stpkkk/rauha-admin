@@ -1,16 +1,17 @@
 import CabinRow from './CabinRow'
-import { CabinType } from '../../types/cabin'
 import Spinner from '../../ui/Spinner'
 import { useCabins } from './useCabins'
 import Table from '../../ui/Table'
 import Menus from '../../ui/Menus'
 import { useSearchParams } from 'react-router-dom'
+import { CabinType } from '../../types/cabin'
+import Empty from '../../ui/Empty'
 
 function CabinTable() {
 	const [searchParams] = useSearchParams()
 	const { isPending, error, cabins } = useCabins()
 
-	//1) FILTER
+	// 1) FILTER
 	const filterValue = searchParams.get('discount') || 'all'
 
 	let filteredCabins
@@ -20,7 +21,7 @@ function CabinTable() {
 	if (filterValue === 'with-discount')
 		filteredCabins = cabins?.filter(cabin => cabin.discount > 0)
 
-	//2) SORTBY
+	// 2) SORTBY
 	const sortBy = searchParams.get('sortBy') || 'name-asc'
 	const [field, direction] = sortBy.split('-')
 	const modifier = direction === 'asc' ? 1 : -1
@@ -31,8 +32,8 @@ function CabinTable() {
 	)
 
 	if (isPending) return <Spinner />
-
 	if (error) return 'An error has occurred: ' + error.message
+	if (!cabins?.length) return <Empty resourceName='номера' />
 
 	return (
 		<Menus>
@@ -46,14 +47,13 @@ function CabinTable() {
 					<div></div>
 				</Table.Header>
 
-				<Table.Body
+				<Table.Body<CabinType>
 					data={sortedCabins || []}
-					render={(cabin: CabinType) => (
-						<CabinRow cabin={cabin} key={cabin.id} />
-					)}
+					render={cabin => <CabinRow key={cabin.id} cabin={cabin} />}
 				/>
 			</Table>
 		</Menus>
 	)
 }
+
 export default CabinTable

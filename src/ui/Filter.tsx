@@ -7,7 +7,7 @@ type FilterProps = {
 }
 
 type FilterButtonProps = {
-	active?: boolean
+	active?: string
 }
 
 const StyledFilter = styled.div`
@@ -59,7 +59,7 @@ const Filter = ({ filterField, options }: FilterProps) => {
 				<FilterButton
 					onClick={() => handleClick(option.value)}
 					key={option.value}
-					active={currentFilter === option.value}
+					active={option.value === currentFilter ? 'true' : undefined}
 					disabled={currentFilter === option.value}
 				>
 					{option.label}
