@@ -1,13 +1,31 @@
 import { getToday } from '../utils/helpers'
 import supabase from './supabase'
 
-export async function getBookings() {
-	const { data, error } = await supabase
+type GetBooking = {
+	filter: {
+		field: string
+		value: string
+		label: string
+	} | null
+}
+
+export async function getBookings({ filter }: GetBooking) {
+  let query = supabase
 		.from('bookings')
-		//.select('*, cabins(*), guests(*)') select ALL data from booking table + cabins and guests tables from supabase (connect tables)
 		.select(
 			'id, created_at, startDate, endDate, numNights, numGuests, totalPrice,status, cabins(name), guests(fullName, email)'
-		) //select only data fields that we needed from api
+		)
+
+	// FILTER
+	if (filter !== null) {
+		if (filter.value === 'all') {
+			// No filtering needed for 'all'
+		} else {
+			query = query.eq(filter.field, filter.label)
+		}
+	}
+
+	const { data, error } = await query
 
 	if (error) {
 		console.error(error)

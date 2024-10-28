@@ -70,24 +70,3 @@ const Filter = ({ filterField, options }: FilterProps) => {
 }
 export default Filter
 
-// const Filter = () => {
-// 	const [searchParams, setSearchParams] = useSearchParams()
-
-// 	function handleClick(value: string) {
-// 		searchParams.set('discount', value)
-// 		setSearchParams(searchParams)
-// 	}
-
-// 	return (
-// 		<StyledFilter>
-// 			<FilterButton onClick={() => handleClick('all')}>Все</FilterButton>
-// 			<FilterButton onClick={() => handleClick('no-discount')}>
-// 				Без скидки
-// 			</FilterButton>
-// 			<FilterButton onClick={() => handleClick('with-discount')}>
-// 				Со скидкой
-// 			</FilterButton>
-// 		</StyledFilter>
-// 	)
-// }
-// export default Filter

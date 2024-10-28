@@ -40,8 +40,8 @@ const Amount = styled.div`
 	font-weight: 500;
 `
 
-function BookingRow({
-	booking: {
+function BookingRow({ booking }: BookingRowProps) {
+	const {
 		// id: bookingId,
 		// created_at,
 		startDate,
@@ -52,17 +52,18 @@ function BookingRow({
 		status,
 		guests,
 		cabins,
-	},
-}: BookingRowProps) {
+	} = booking
+
 	const statusToTagName: { [K in Status]: TagName } = {
-		'не подтверждено': 'blue',
-		заселился: 'green',
-		выселился: 'silver',
+		'Не подтверждено': 'blue',
+		Заселился: 'green',
+		Выселился: 'silver',
 	}
 
 	function isStatus(status: string): status is Status {
 		return status in statusToTagName
 	}
+
 	if (!isStatus(status)) {
 		console.error(`Invalid status: ${status}`)
 		return null

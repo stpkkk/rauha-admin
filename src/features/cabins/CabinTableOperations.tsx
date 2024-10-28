@@ -1,12 +1,6 @@
-import styled from 'styled-components'
 import Filter from '../../ui/Filter'
 import SortBy from '../../ui/SortBy'
-
-const TableOperations = styled.div`
-	display: flex;
-	align-items: center;
-	gap: 1.6rem;
-`
+import { TableOperations } from '../../ui/TableOperations'
 
 const CabinTableOperations = () => {
 	return (
