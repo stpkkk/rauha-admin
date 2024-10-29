@@ -4,23 +4,13 @@ import { TableOperations } from '../../ui/TableOperations'
 import { useBookings } from './useBookings'
 
 function BookingTableOperations() {
-  const { filterOptions } = useBookings()
+  const { filterOptions, sortByOptions } = useBookings()
 
 	return (
 		<TableOperations>
 			<Filter filterField='status' options={filterOptions} />
 
-			<SortBy
-				options={[
-					{ value: 'startDate-desc', label: 'По дате (старые)' },
-					{ value: 'startDate-asc', label: 'По дате (новые)' },
-					{
-						value: 'totalPrice-desc',
-						label: 'По цене (выше)',
-					},
-					{ value: 'totalPrice-asc', label: 'По цене (ниже)' },
-				]}
-			/>
+			<SortBy options={sortByOptions} />
 		</TableOperations>
 	)
 }

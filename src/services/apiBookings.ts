@@ -1,29 +1,41 @@
+import { BookingType } from '../types/booking'
 import { getToday } from '../utils/helpers'
 import supabase from './supabase'
 
-type GetBooking = {
+type GetBookings = {
 	filter: {
 		field: string
 		value: string
 		label: string
 	} | null
+	sortBy: {
+		field: string
+		direction: string
+	}
 }
 
-export async function getBookings({ filter }: GetBooking) {
-  let query = supabase
+export async function getBookings({
+	filter,
+	sortBy,
+}: GetBookings): Promise<BookingType[]> {
+	let query = supabase
 		.from('bookings')
 		.select(
 			'id, created_at, startDate, endDate, numNights, numGuests, totalPrice,status, cabins(name), guests(fullName, email)'
 		)
 
 	// FILTER
-	if (filter !== null) {
+	if (filter) {
+		// No filtering needed for 'all'
 		if (filter.value === 'all') {
-			// No filtering needed for 'all'
 		} else {
 			query = query.eq(filter.field, filter.label)
 		}
 	}
+
+	//SORTBY
+	if (sortBy)
+		query = query.order(sortBy.field, { ascending: sortBy.direction === 'asc' })
 
 	const { data, error } = await query
 

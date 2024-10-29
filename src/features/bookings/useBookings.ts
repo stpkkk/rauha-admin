@@ -9,6 +9,16 @@ const filterOptions = [
 	{ value: 'unconfirmed', label: 'Не подтверждено' },
 ]
 
+const sortByOptions = [
+	{ value: 'startDate-desc', label: 'По дате (старые)' },
+	{ value: 'startDate-asc', label: 'По дате (новые)' },
+	{
+		value: 'totalPrice-desc',
+		label: 'По цене (выше)',
+	},
+	{ value: 'totalPrice-asc', label: 'По цене (ниже)' },
+]
+
 export function useBookings() {
 	const [searchParams] = useSearchParams()
 
@@ -27,15 +37,18 @@ export function useBookings() {
 			  }
 
 	//SORTBY
+	const sortByRaw = searchParams.get('sortBy') || 'startDate-desc'
+	const [field, direction] = sortByRaw.split('-')
+	const sortBy = { field, direction }
 
 	const {
 		isPending,
 		error,
 		data: bookings,
 	} = useQuery({
-		queryKey: ['bookings', filter],
-		queryFn: () => getBookings({ filter }),
+		queryKey: ['bookings', filter, sortBy],
+		queryFn: () => getBookings({ filter, sortBy }),
 	})
 
-	return { isPending, error, bookings, filterOptions }
+	return { isPending, error, bookings, filterOptions, sortByOptions }
 }
