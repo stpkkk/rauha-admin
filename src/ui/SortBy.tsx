@@ -13,8 +13,10 @@ const SortBy = ({ options }: SortProps) => {
 	function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
 		const value = event.target.value
 
-		searchParams.set('sortBy', value)
-		setSearchParams(searchParams)
+		setSearchParams(searchParams => {
+			searchParams.set('sortBy', value)
+			return searchParams
+		})
 	}
 
 	return (
