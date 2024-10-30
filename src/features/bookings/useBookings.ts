@@ -46,6 +46,7 @@ export function useBookings() {
 		error,
 		data: bookings,
 	} = useQuery({
+		//['bookings', filter, sortBy] - dependency array, fetch and cache data if some value change
 		queryKey: ['bookings', filter, sortBy],
 		queryFn: () => getBookings({ filter, sortBy }),
 	})
