@@ -5,6 +5,7 @@ import { BookingType } from '../../types/booking'
 import { useBookings } from './useBookings'
 import Spinner from '../../ui/Spinner'
 import Empty from '../../ui/Empty'
+import Pagination from '../../ui/Pagination'
 
 function BookingTable() {
 	const { bookings, isPending, error } = useBookings()
@@ -38,6 +39,9 @@ function BookingTable() {
 					data={normalizedBookings}
 					render={booking => <BookingRow key={booking.id} booking={booking} />}
 				/>
+				<Table.Footer>
+					<Pagination numResults={45} />
+				</Table.Footer>
 			</Table>
 		</Menus>
 	)
