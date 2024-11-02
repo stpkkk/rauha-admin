@@ -8,10 +8,10 @@ import Empty from '../../ui/Empty'
 import Pagination from '../../ui/Pagination'
 
 function BookingTable() {
-	const { bookings, isPending, error } = useBookings()
+	const { bookings, isPending, error, count } = useBookings()
 
 	const normalizedBookings =
-		bookings?.map(booking => ({
+		bookings?.map((booking: BookingType) => ({
 			...booking,
 			cabins: Array.isArray(booking.cabins) ? booking.cabins : [booking.cabins],
 			guests: Array.isArray(booking.guests) ? booking.guests : [booking.guests],
@@ -40,7 +40,7 @@ function BookingTable() {
 					render={booking => <BookingRow key={booking.id} booking={booking} />}
 				/>
 				<Table.Footer>
-					<Pagination numResults={45} />
+					<Pagination numResults={count} />
 				</Table.Footer>
 			</Table>
 		</Menus>

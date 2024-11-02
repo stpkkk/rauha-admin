@@ -1,8 +1,9 @@
 import { BookingType } from '../types/booking'
+import { PAGE_SIZE } from '../utils/constants'
 import { getToday } from '../utils/helpers'
 import supabase from './supabase'
 
-type GetBookings = {
+type BookingFilterOptions = {
 	filter: {
 		field: string
 		value: string
@@ -12,17 +13,24 @@ type GetBookings = {
 		field: string
 		direction: string
 	}
+	page: number
+}
+
+type BookingsQueryResult = {
+	data: BookingType[]
+	count: number | null
 }
 
 export async function getBookings({
 	filter,
 	sortBy,
-}: GetBookings): Promise<BookingType[]> {
-	let query = supabase
-		.from('bookings')
-		.select(
-			'id, created_at, startDate, endDate, numNights, numGuests, totalPrice,status, cabins(name), guests(fullName, email)'
-		)
+	page,
+}: BookingFilterOptions): Promise<BookingsQueryResult> {
+	let query = supabase.from('bookings').select(
+		'id, created_at, startDate, endDate, numNights, numGuests, totalPrice,status, cabins(name), guests(fullName, email)',
+		//get the number of results(bookings)
+		{ count: 'exact' }
+	)
 
 	// FILTER
 	if (filter) {
@@ -37,14 +45,22 @@ export async function getBookings({
 	if (sortBy)
 		query = query.order(sortBy.field, { ascending: sortBy.direction === 'asc' })
 
-	const { data, error } = await query
+	//PAGINATION
+	if (page) {
+		const from = (page - 1) * PAGE_SIZE
+		const to = from + PAGE_SIZE - 1
+
+		query.range(from, to)
+	}
+
+	const { data, error, count } = await query
 
 	if (error) {
 		console.error(error)
 		throw new Error('Bookings could not be loaded')
 	}
 
-	return data
+	return { data, count }
 }
 
 export async function getBooking(id: number) {

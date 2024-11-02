@@ -41,15 +41,25 @@ export function useBookings() {
 	const [field, direction] = sortByRaw.split('-')
 	const sortBy = { field, direction }
 
+	//PAGINATION
+	const page = !searchParams.get('page') ? 1 : Number(searchParams.get('page'))
+
 	const {
 		isPending,
 		error,
-		data: bookings,
+		data: bookingsData,
 	} = useQuery({
 		//['bookings', filter, sortBy] - dependency array, fetch and cache data if some value change
-		queryKey: ['bookings', filter, sortBy],
-		queryFn: () => getBookings({ filter, sortBy }),
+		queryKey: ['bookings', filter, sortBy, page],
+		queryFn: () => getBookings({ filter, sortBy, page }),
 	})
 
-	return { isPending, error, bookings, filterOptions, sortByOptions }
+	return {
+		isPending,
+		error,
+		bookings: bookingsData?.data || [],
+		count: bookingsData?.count || 0,
+		filterOptions,
+		sortByOptions,
+	}
 }
