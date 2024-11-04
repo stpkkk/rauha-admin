@@ -8,7 +8,7 @@ type PaginationProps = {
 }
 
 type PaginationButtonProps = {
-	active: boolean
+	active: string
 }
 
 const StyledPagination = styled.div`
@@ -108,7 +108,7 @@ const Pagination = ({ numResults }: PaginationProps) => {
 
 			<Buttons>
 				<PaginationButton
-					active={false}
+					active='false'
 					onClick={prevPage}
 					disabled={currentPage === 1}
 				>
@@ -116,7 +116,7 @@ const Pagination = ({ numResults }: PaginationProps) => {
 					<span>Предыдущие</span>
 				</PaginationButton>
 				<PaginationButton
-					active={false}
+					active='false'
 					onClick={nextPage}
 					disabled={currentPage === pageCount}
 				>

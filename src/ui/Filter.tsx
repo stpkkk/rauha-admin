@@ -49,6 +49,7 @@ const Filter = ({ filterField, options }: FilterProps) => {
 	const currentFilter = searchParams.get(filterField) || options.at(0)?.value
 
 	function handleClick(value: string) {
+		searchParams.set('page', '1')
 		setSearchParams(searchParams => {
 			searchParams.set(filterField, value)
 			return searchParams
