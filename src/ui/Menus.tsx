@@ -16,7 +16,7 @@ type MenuProps = {
 type ButtonProps = {
 	children: ReactNode
 	onClick?: () => void
-	icon: React.ReactNode
+	icon: ReactNode
 }
 
 type ListProps = {

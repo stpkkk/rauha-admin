@@ -5,10 +5,20 @@ export type BookingType = {
 	endDate: string
 	numNights: number
 	numGuests: number
+	cabinPrice: number
+	extrasPrice: number
 	totalPrice: number
+	hasBreakfast: boolean
+	observations: string
+	isPaid: boolean
 	status: string
-	cabins: { name: string } | { name: string }[]
-	guests:
-		| { fullName: string; email: string }
-		| { fullName: string; email: string }[]
+	guests: {
+		fullName: string
+		email: string
+		homeTown: string
+		passportId: string
+	}
+	cabins: {
+		name: string
+	}
 }

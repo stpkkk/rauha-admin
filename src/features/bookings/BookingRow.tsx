@@ -1,13 +1,17 @@
-import styled from 'styled-components'
 import { format, isToday } from 'date-fns'
+import styled from 'styled-components'
 
 import Table from '../../ui/Table'
 
-import { formatCurrency } from '../../utils/helpers'
-import { formatDistanceFromNow } from '../../utils/helpers'
+import { BsFillSaveFill } from 'react-icons/bs'
+import { HiEye, HiTrash } from 'react-icons/hi2'
 import { BookingType } from '../../types/booking'
 import { Status, TagName } from '../../types/status'
+import Menus from '../../ui/Menus'
+import Modal from '../../ui/Modal'
 import Tag from '../../ui/Tag'
+import { formatCurrency, formatDistanceFromNow } from '../../utils/helpers'
+import { useNavigate } from 'react-router-dom'
 
 type BookingRowProps = {
 	booking: BookingType
@@ -41,8 +45,9 @@ const Amount = styled.div`
 `
 
 function BookingRow({ booking }: BookingRowProps) {
+	const navigate = useNavigate()
 	const {
-		// id: bookingId,
+		id: bookingId,
 		// created_at,
 		startDate,
 		endDate,
@@ -97,6 +102,42 @@ function BookingRow({ booking }: BookingRowProps) {
 			<Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
 
 			<Amount>{formatCurrency(totalPrice)}</Amount>
+			<Modal>
+				<Menus.Menu>
+					<Menus.Toggle id={bookingId?.toString()} />
+					<Menus.List id={bookingId?.toString()}>
+						<Menus.Button
+							icon={<HiEye />}
+							onClick={() => navigate(`/bookings/${bookingId}`)}
+						>
+							Детали
+						</Menus.Button>
+
+						<Menus.Button icon={<BsFillSaveFill />}>
+							Зарегистрировать
+						</Menus.Button>
+
+						<Modal.Open opens='delete'>
+							{openModal => (
+								<Menus.Button icon={<HiTrash />} onClick={openModal}>
+									Удалить
+								</Menus.Button>
+							)}
+						</Modal.Open>
+					</Menus.List>
+
+					{/* <Modal.Window name='delete'>
+						{closeModal => (
+							<ConfirmDelete
+								resourceName='номер'
+								disabled={isDeleting}
+								onConfirm={() => deleteCabinMutation(cabinId)}
+								onCloseModal={closeModal}
+							/>
+						)}
+					</Modal.Window> */}
+				</Menus.Menu>
+			</Modal>
 		</Table.Row>
 	)
 }

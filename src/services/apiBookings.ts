@@ -1,4 +1,3 @@
-import { BookingType } from '../types/booking'
 import { PAGE_SIZE } from '../utils/constants'
 import { getToday } from '../utils/helpers'
 import supabase from './supabase'
@@ -16,8 +15,33 @@ type BookingFilterOptions = {
 	page: number
 }
 
+type BookingType = {
+	id: number
+	created_at: string
+	startDate: string
+	endDate: string
+	numNights: number
+	numGuests: number
+	cabinPrice: number
+	extrasPrice: number
+	totalPrice: number
+	hasBreakfast: boolean
+	observations: string
+	isPaid: boolean
+	status: string
+	guests: {
+		fullName: string
+		email: string
+		homeTown?: string
+		passportId?: string
+	}[]
+	cabins: {
+		name: string
+	}[]
+}
+
 type BookingsQueryResult = {
-	data: BookingType[]
+	data: Partial<BookingType>[]
 	count: number | null
 }
 
@@ -63,7 +87,7 @@ export async function getBookings({
 	return { data, count }
 }
 
-export async function getBooking(id: number) {
+export async function getBooking(id: string) {
 	const { data, error } = await supabase
 		.from('bookings')
 		.select('*, cabins(*), guests(*)')
