@@ -8,12 +8,12 @@ import {
 } from 'react-icons/hi2'
 
 import DataItem from '../../ui/DataItem'
-// import { Flag } from '../../ui/Flag'
 import { formatDistanceFromNow, formatCurrency } from '../../utils/helpers'
 import { BookingType } from '../../types/booking'
 
 type PriceProps = {
-	isPaid: boolean
+	//`$` prefix for the `isPaid` prop, which is a convention in styled-components to indicate that this prop should not be passed to the DOM. This
+	$isPaid: boolean
 }
 
 type BookingDataBoxProps = {
@@ -85,9 +85,9 @@ const Price = styled.div<PriceProps>`
 	margin-top: 2.4rem;
 
 	background-color: ${props =>
-		props.isPaid ? 'var(--color-green-100)' : 'var(--color-yellow-100)'};
+		props.$isPaid ? 'var(--color-green-100)' : 'var(--color-yellow-100)'};
 	color: ${props =>
-		props.isPaid ? 'var(--color-green-700)' : 'var(--color-yellow-700)'};
+		props.$isPaid ? 'var(--color-green-700)' : 'var(--color-yellow-700)'};
 
 	& p:last-child {
 		text-transform: uppercase;
@@ -171,7 +171,7 @@ function BookingDataBox({ booking }: BookingDataBoxProps) {
 					{hasBreakfast ? 'Да' : 'Нет'}
 				</DataItem>
 
-				<Price isPaid={isPaid}>
+				<Price $isPaid={isPaid}>
 					<DataItem
 						icon={<HiOutlineCurrencyDollar />}
 						label={`Стоимость итого:`}

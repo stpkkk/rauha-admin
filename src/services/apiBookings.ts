@@ -14,7 +14,6 @@ type BookingFilterOptions = {
 	}
 	page: number
 }
-
 type BookingType = {
 	id: number
 	created_at: string
@@ -22,12 +21,7 @@ type BookingType = {
 	endDate: string
 	numNights: number
 	numGuests: number
-	cabinPrice: number
-	extrasPrice: number
 	totalPrice: number
-	hasBreakfast: boolean
-	observations: string
-	isPaid: boolean
 	status: string
 	guests: {
 		fullName: string
@@ -41,7 +35,7 @@ type BookingType = {
 }
 
 type BookingsQueryResult = {
-	data: Partial<BookingType>[]
+	data: BookingType[]
 	count: number | null
 }
 
