@@ -10,12 +10,11 @@ import Pagination from '../../ui/Pagination'
 function BookingTable() {
 	const { bookings, isPending, error, count } = useBookings()
 
-	const normalizedBookings =
-		bookings?.map((booking: BookingType) => ({
-			...booking,
-			cabins: Array.isArray(booking.cabins) ? booking.cabins : [booking.cabins],
-			guests: Array.isArray(booking.guests) ? booking.guests : [booking.guests],
-		})) || []
+	const normalizedBookings = bookings.map((booking: BookingType) => ({
+		...booking,
+		cabins: Array.isArray(booking.cabins) ? booking.cabins : [booking.cabins],
+		guests: Array.isArray(booking.guests) ? booking.guests : [booking.guests],
+	}))
 
 	if (isPending) return <Spinner />
 
@@ -31,7 +30,7 @@ function BookingTable() {
 					<div>Гости</div>
 					<div>Даты</div>
 					<div>Статус</div>
-					<div>Количество</div>
+					<div>Стоимость</div>
 					<div></div>
 				</Table.Header>
 

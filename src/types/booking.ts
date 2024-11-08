@@ -5,20 +5,20 @@ export type BookingType = {
 	endDate: string
 	numNights: number
 	numGuests: number
-	cabinPrice: number
-	extrasPrice: number
+	cabinPrice?: number
+	extrasPrice?: number
 	totalPrice: number
-	hasBreakfast: boolean
-	observations: string
-	isPaid: boolean
+	hasBreakfast?: boolean
+	observations?: string
+	isPaid?: boolean
 	status: string
-	guests: {
+	guests: Array<{
 		fullName: string
 		email: string
-		homeTown: string
-		passportId: string
-	}
-	cabins: {
+		homeTown?: string
+		passportId?: string
+	}>
+	cabins: Array<{
 		name: string
-	}
+	}>
 }

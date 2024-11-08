@@ -123,8 +123,8 @@ function BookingDataBox({ booking }: BookingDataBoxProps) {
 		hasBreakfast,
 		observations,
 		isPaid,
-		guests: { fullName: guestName, email, homeTown, passportId },
-		cabins: { name: cabinName },
+		guests: [{ fullName: guestName, email, homeTown, passportId }],
+		cabins: [{ name: cabinName }],
 	} = booking
 
 	return (
@@ -171,7 +171,7 @@ function BookingDataBox({ booking }: BookingDataBoxProps) {
 					{hasBreakfast ? 'Да' : 'Нет'}
 				</DataItem>
 
-				<Price $isPaid={isPaid}>
+				<Price $isPaid={isPaid || false}>
 					<DataItem
 						icon={<HiOutlineCurrencyDollar />}
 						label={`Стоимость итого:`}
@@ -179,8 +179,8 @@ function BookingDataBox({ booking }: BookingDataBoxProps) {
 						{formatCurrency(totalPrice)}
 
 						{hasBreakfast &&
-							` (${formatCurrency(cabinPrice)} номер + ${formatCurrency(
-								extrasPrice
+							` (${formatCurrency(cabinPrice || 0)} номер + ${formatCurrency(
+								extrasPrice || 0
 							)} завтрак)`}
 					</DataItem>
 

@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext } from 'react'
 import styled from 'styled-components'
+
 type TableContextType = {
 	columns: string
 }
