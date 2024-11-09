@@ -13,7 +13,7 @@ import { BookingType } from '../../types/booking'
 
 type PriceProps = {
 	//`$` prefix for the `isPaid` prop, which is a convention in styled-components to indicate that this prop should not be passed to the DOM. This
-	$isPaid: boolean
+	$isPaid?: boolean
 }
 
 type BookingDataBoxProps = {
@@ -123,9 +123,15 @@ function BookingDataBox({ booking }: BookingDataBoxProps) {
 		hasBreakfast,
 		observations,
 		isPaid,
-		guests: [{ fullName: guestName, email, homeTown, passportId }],
-		cabins: [{ name: cabinName }],
+		guests,
+		cabins,
 	} = booking
+
+	const guest = Array.isArray(guests) ? guests[0] : guests
+	const { fullName: guestName, email, homeTown, passportId } = guest || {}
+
+	// Safely access the cabin name
+	const cabinName = Array.isArray(cabins) ? cabins[0]?.name : cabins?.name
 
 	return (
 		<StyledBookingDataBox>
@@ -171,7 +177,7 @@ function BookingDataBox({ booking }: BookingDataBoxProps) {
 					{hasBreakfast ? 'Да' : 'Нет'}
 				</DataItem>
 
-				<Price $isPaid={isPaid || false}>
+				<Price $isPaid={isPaid}>
 					<DataItem
 						icon={<HiOutlineCurrencyDollar />}
 						label={`Стоимость итого:`}
@@ -184,7 +190,7 @@ function BookingDataBox({ booking }: BookingDataBoxProps) {
 							)} завтрак)`}
 					</DataItem>
 
-					<p>{isPaid ? 'Оплачено' : 'Будет оплачено на месте'}</p>
+					<p>{isPaid ? 'Оплачено' : 'Не оплачено'}</p>
 				</Price>
 			</Section>
 

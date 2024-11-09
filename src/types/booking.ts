@@ -18,7 +18,11 @@ export type BookingType = {
 		homeTown?: string
 		passportId?: string
 	}>
-	cabins: Array<{
-		name: string
-	}>
+	cabins:
+		| Array<{
+				name: string
+		  }>
+		| {
+				name: string
+		  }
 }

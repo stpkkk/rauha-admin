@@ -3,8 +3,7 @@ import styled from 'styled-components'
 
 import Table from '../../ui/Table'
 
-import { BsFillSaveFill } from 'react-icons/bs'
-import { HiEye, HiTrash } from 'react-icons/hi2'
+import { HiArrowDownOnSquare, HiEye, HiTrash } from 'react-icons/hi2'
 import { BookingType } from '../../types/booking'
 import { Status, TagName } from '../../types/status'
 import Menus from '../../ui/Menus'
@@ -113,9 +112,14 @@ function BookingRow({ booking }: BookingRowProps) {
 							Детали
 						</Menus.Button>
 
-						<Menus.Button icon={<BsFillSaveFill />}>
-							Зарегистрировать
-						</Menus.Button>
+						{status === 'Не подтверждено' && (
+							<Menus.Button
+								icon={<HiArrowDownOnSquare />}
+								onClick={() => navigate(`/check-in/${bookingId}`)}
+							>
+								Зарегистрировать
+							</Menus.Button>
+						)}
 
 						<Modal.Open opens='delete'>
 							{openModal => (
