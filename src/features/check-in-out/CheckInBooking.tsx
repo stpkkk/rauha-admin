@@ -36,7 +36,7 @@ function CheckInBooking() {
 		// numGuests,
 		// hasBreakfast,
 		// numNights,
-	} = booking
+	} = booking || {}
 
 	function handleCheckIn() {
 		if (!confirmPaid) return
@@ -44,7 +44,7 @@ function CheckInBooking() {
 		checkIn(bookingId)
 	}
 
-	useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking.isPaid])
+	useEffect(() => setConfirmPaid(booking?.isPaid ?? false), [booking])
 
 	if (isPending || isCheckingIn) return <Spinner />
 

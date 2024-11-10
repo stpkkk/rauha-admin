@@ -62,7 +62,7 @@ function BookingDetail() {
 			<ButtonGroup>
 				{status === 'Не подтверждено' && (
 					<Button onClick={() => navigate(`/check-in/${bookingId}`)}>
-						Зарегистрировать
+						Заселить
 					</Button>
 				)}
 				<Button variation='danger'>Удалить бронирование</Button>

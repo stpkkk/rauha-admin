@@ -117,7 +117,7 @@ function BookingRow({ booking }: BookingRowProps) {
 								icon={<HiArrowDownOnSquare />}
 								onClick={() => navigate(`/check-in/${bookingId}`)}
 							>
-								Зарегистрировать
+								Заселить
 							</Menus.Button>
 						)}
 
