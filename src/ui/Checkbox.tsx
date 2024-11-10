@@ -5,7 +5,7 @@ type CheckBoxProps = {
 	children: ReactNode
 	checked: boolean
 	onChange: () => void
-	disabled: boolean
+	disabled?: boolean
 	id: string
 }
 

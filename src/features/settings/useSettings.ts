@@ -5,7 +5,7 @@ export function useSettings() {
 	const {
 		isPending,
 		error,
-		data: settings,
+		data: settings = {},
 	} = useQuery({
 		queryKey: ['settings'],
 		queryFn: getSettings,
