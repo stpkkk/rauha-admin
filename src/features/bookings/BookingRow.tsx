@@ -1,17 +1,25 @@
 import { format, isToday } from 'date-fns'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import {
+	HiArrowDownOnSquare,
+	HiArrowUpOnSquare,
+	HiEye,
+	HiTrash,
+} from 'react-icons/hi2'
 
 import Table from '../../ui/Table'
-
-import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye } from 'react-icons/hi2'
-import { BookingType } from '../../types/booking'
-import { Status, TagName } from '../../types/status'
 import Menus from '../../ui/Menus'
 import Modal from '../../ui/Modal'
 import Tag from '../../ui/Tag'
+import ConfirmDelete from '../../ui/ConfirmDelete'
+
 import { formatCurrency, formatDistanceFromNow } from '../../utils/helpers'
-import { useNavigate } from 'react-router-dom'
 import { useCheckOut } from '../check-in-out/useCheckOut'
+import { useDeleteBooking } from './useDeleteBooking'
+
+import { BookingType } from '../../types/booking'
+import { Status, TagName } from '../../types/status'
 
 type BookingRowProps = {
 	booking: BookingType
@@ -60,6 +68,7 @@ function BookingRow({ booking }: BookingRowProps) {
 	} = booking
 
 	const { checkOutMutation, isCheckingOut } = useCheckOut()
+	const { deleteBookingMutation, isDeleting } = useDeleteBooking()
 
 	const statusToTagName: { [K in Status]: TagName } = {
 		'Не подтверждено': 'blue',
@@ -133,8 +142,27 @@ function BookingRow({ booking }: BookingRowProps) {
 								Выселить
 							</Menus.Button>
 						)}
+
+						<Modal.Open opens='delete'>
+							{openModal => (
+								<Menus.Button icon={<HiTrash />} onClick={openModal}>
+									<span>Удалить</span>
+								</Menus.Button>
+							)}
+						</Modal.Open>
 					</Menus.List>
 				</Menus.Menu>
+
+				<Modal.Window name='delete'>
+					{closeModal => (
+						<ConfirmDelete
+							resourceName='бронирование'
+							disabled={isDeleting}
+							onConfirm={() => deleteBookingMutation(bookingId)}
+							onCloseModal={closeModal}
+						/>
+					)}
+				</Modal.Window>
 			</Modal>
 		</Table.Row>
 	)

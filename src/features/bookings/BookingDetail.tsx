@@ -14,6 +14,9 @@ import { useBooking } from './useBooking'
 import Spinner from '../../ui/Spinner'
 import { useNavigate } from 'react-router-dom'
 import { useCheckOut } from '../check-in-out/useCheckOut'
+import { useDeleteBooking } from './useDeleteBooking'
+import Modal from '../../ui/Modal'
+import ConfirmDelete from '../../ui/ConfirmDelete'
 
 const HeadingGroup = styled.div`
 	display: flex;
@@ -25,6 +28,7 @@ function BookingDetail() {
 	const navigate = useNavigate()
 	const { booking, isPending } = useBooking()
 	const { checkOutMutation, isCheckingOut } = useCheckOut()
+	const { deleteBookingMutation, isDeleting } = useDeleteBooking()
 
 	const { status, id: bookingId } = booking || {}
 
@@ -67,6 +71,7 @@ function BookingDetail() {
 						Заселить
 					</Button>
 				)}
+
 				{status === 'Заселился' && (
 					<Button
 						disabled={isCheckingOut}
@@ -75,7 +80,33 @@ function BookingDetail() {
 						Выселить
 					</Button>
 				)}
-				<Button variation='danger'>Удалить бронирование</Button>
+
+				<Modal>
+					<Modal.Open opens='delete'>
+						{openModal => (
+							<Button onClick={openModal} variation='danger'>
+								<span>Удалить</span>
+							</Button>
+						)}
+					</Modal.Open>
+
+					<Modal.Window name='delete'>
+						{closeModal => (
+							<ConfirmDelete
+								resourceName='бронирование'
+								disabled={isDeleting}
+								onConfirm={() =>
+									deleteBookingMutation(bookingId, {
+										//individual mutation (like onsSuccess), that back to previous page no matter if this success or not
+										onSettled: moveBack,
+									})
+								}
+								onCloseModal={closeModal}
+							/>
+						)}
+					</Modal.Window>
+				</Modal>
+
 				<Button variation='secondary' onClick={moveBack}>
 					Назад
 				</Button>
