@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import Table from '../../ui/Table'
 
-import { HiArrowDownOnSquare, HiEye, HiTrash } from 'react-icons/hi2'
+import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye } from 'react-icons/hi2'
 import { BookingType } from '../../types/booking'
 import { Status, TagName } from '../../types/status'
 import Menus from '../../ui/Menus'
@@ -11,6 +11,7 @@ import Modal from '../../ui/Modal'
 import Tag from '../../ui/Tag'
 import { formatCurrency, formatDistanceFromNow } from '../../utils/helpers'
 import { useNavigate } from 'react-router-dom'
+import { useCheckOut } from '../check-in-out/useCheckOut'
 
 type BookingRowProps = {
 	booking: BookingType
@@ -57,6 +58,8 @@ function BookingRow({ booking }: BookingRowProps) {
 		guests,
 		cabins,
 	} = booking
+
+	const { checkOutMutation, isCheckingOut } = useCheckOut()
 
 	const statusToTagName: { [K in Status]: TagName } = {
 		'Не подтверждено': 'blue',
@@ -121,25 +124,16 @@ function BookingRow({ booking }: BookingRowProps) {
 							</Menus.Button>
 						)}
 
-						<Modal.Open opens='delete'>
-							{openModal => (
-								<Menus.Button icon={<HiTrash />} onClick={openModal}>
-									Удалить
-								</Menus.Button>
-							)}
-						</Modal.Open>
-					</Menus.List>
-
-					{/* <Modal.Window name='delete'>
-						{closeModal => (
-							<ConfirmDelete
-								resourceName='номер'
-								disabled={isDeleting}
-								onConfirm={() => deleteCabinMutation(cabinId)}
-								onCloseModal={closeModal}
-							/>
+						{status === 'Заселился' && (
+							<Menus.Button
+								icon={<HiArrowUpOnSquare />}
+								disabled={isCheckingOut}
+								onClick={() => checkOutMutation(bookingId)}
+							>
+								Выселить
+							</Menus.Button>
 						)}
-					</Modal.Window> */}
+					</Menus.List>
 				</Menus.Menu>
 			</Modal>
 		</Table.Row>

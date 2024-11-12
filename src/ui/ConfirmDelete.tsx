@@ -37,7 +37,7 @@ function ConfirmDelete({
 		<StyledConfirmDelete>
 			<Heading as='h3'>Удалить {resourceName}</Heading>
 			<p>
-				Вы уверены что хотите удалить {resourceName}. Это действие необратимо..
+				Вы уверены что хотите удалить {resourceName}. Это действие необратимо!
 			</p>
 
 			<div>

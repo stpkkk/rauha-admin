@@ -84,7 +84,6 @@ function CheckInBooking() {
 					<Checkbox
 						checked={addBreakfast}
 						onChange={handleAddBreakfast}
-						// disabled={confirmPaid || isCheckingIn}
 						id='breakfast'
 					>
 						Добавить завтрак за {formatCurrency(optionalBreakfastPrice)} руб?

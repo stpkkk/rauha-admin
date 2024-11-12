@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 type updateBookingParams = {
-	bookingId: void
+	bookingId: number
 	breakfast:
 		| {
 				hasBreakfast: boolean

@@ -13,6 +13,7 @@ import { Status, TagName } from '../../types/status'
 import { useBooking } from './useBooking'
 import Spinner from '../../ui/Spinner'
 import { useNavigate } from 'react-router-dom'
+import { useCheckOut } from '../check-in-out/useCheckOut'
 
 const HeadingGroup = styled.div`
 	display: flex;
@@ -23,6 +24,7 @@ const HeadingGroup = styled.div`
 function BookingDetail() {
 	const navigate = useNavigate()
 	const { booking, isPending } = useBooking()
+	const { checkOutMutation, isCheckingOut } = useCheckOut()
 
 	const { status, id: bookingId } = booking || {}
 
@@ -63,6 +65,14 @@ function BookingDetail() {
 				{status === 'Не подтверждено' && (
 					<Button onClick={() => navigate(`/check-in/${bookingId}`)}>
 						Заселить
+					</Button>
+				)}
+				{status === 'Заселился' && (
+					<Button
+						disabled={isCheckingOut}
+						onClick={() => checkOutMutation(bookingId)}
+					>
+						Выселить
 					</Button>
 				)}
 				<Button variation='danger'>Удалить бронирование</Button>

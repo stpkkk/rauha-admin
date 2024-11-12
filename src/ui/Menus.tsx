@@ -17,6 +17,7 @@ type ButtonProps = {
 	children: ReactNode
 	onClick?: () => void
 	icon: ReactNode
+	disabled?: boolean
 }
 
 type ListProps = {
@@ -135,7 +136,7 @@ function Toggle({ id }: ToggleProps) {
 	)
 }
 
-function Button({ children, icon, onClick }: ButtonProps) {
+function Button({ children, icon, onClick, disabled }: ButtonProps) {
 	const context = useContext(MenusContext)
 	if (!context) throw new Error('Button must be used within a Menus')
 
@@ -148,7 +149,7 @@ function Button({ children, icon, onClick }: ButtonProps) {
 
 	return (
 		<li>
-			<StyledButton onClick={handleClick}>
+			<StyledButton onClick={handleClick} disabled={disabled}>
 				{icon}
 				<span>{children}</span>
 			</StyledButton>
