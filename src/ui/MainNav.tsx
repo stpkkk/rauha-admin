@@ -4,6 +4,7 @@ import {
 	HiOutlineHomeModern,
 	HiOutlineUsers,
 } from 'react-icons/hi2'
+import { IoSettingsOutline } from 'react-icons/io5'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -75,8 +76,14 @@ function MainNav() {
 					</StyledLink>
 				</li>
 				<li>
-					<StyledLink to='/settings'>
+					<StyledLink to='/users'>
 						<HiOutlineUsers />
+						<span>Users</span>
+					</StyledLink>
+				</li>
+				<li>
+					<StyledLink to='/settings'>
+						<IoSettingsOutline />
 						<span>Settings</span>
 					</StyledLink>
 				</li>
