@@ -1,11 +1,29 @@
 import supabase from './supabase'
 
-type LoginParams = {
+type Credentials = {
 	email: string
 	password: string
+	fullName?: string
 }
 
-export async function login({ email, password }: LoginParams) {
+export async function signup({ fullName, email, password }: Credentials) {
+	const { data, error } = await supabase.auth.signUp({
+		email,
+		password,
+		options: {
+			data: {
+				fullName,
+				avatar: '',
+			},
+		},
+	})
+
+	if (error) throw new Error(error.message)
+
+	return data
+}
+
+export async function login({ email, password }: Credentials) {
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email: email,
 		password: password,
@@ -33,3 +51,4 @@ export async function logout() {
 
 	if (error) throw new Error(error.message)
 }
+

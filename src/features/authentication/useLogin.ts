@@ -3,7 +3,7 @@ import { login as loginApi } from '../../services/apiAuth'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
-type LoginParams = {
+type LoginCredentials = {
 	email: string
 	password: string
 }
@@ -13,7 +13,7 @@ export function useLogin() {
 	const navigate = useNavigate()
 
 	const { mutate: login, isPending: isPendingLogin } = useMutation({
-		mutationFn: ({ email, password }: LoginParams) =>
+		mutationFn: ({ email, password }: LoginCredentials) =>
 			loginApi({ email, password }),
 
 		onSuccess: user => {
