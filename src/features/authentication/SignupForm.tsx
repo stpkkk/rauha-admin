@@ -42,34 +42,34 @@ function SignupForm() {
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit)}>
-			<FormRow label='ФИО' error={errors?.fullName?.message}>
+			<FormRow label='ФИО:' error={errors?.fullName?.message}>
 				<Input
 					type='text'
 					id='fullName'
 					disabled={isPendingSignup}
 					{...register('fullName', {
-						required: 'Это поле обязательное',
+						required: 'Это поле обязательное!',
 					})}
 				/>
 			</FormRow>
 
-			<FormRow label='Email' error={errors?.email?.message}>
+			<FormRow label='Email:' error={errors?.email?.message}>
 				<Input
 					type='email'
 					id='email'
 					disabled={isPendingSignup}
 					{...register('email', {
-						required: 'Это поле обязательное',
+						required: 'Это поле обязательное!',
 						pattern: {
 							value: /\S+@\S+\.\S+/,
-							message: 'Неправильно указан email',
+							message: 'Неправильно указан email!',
 						},
 					})}
 				/>
 			</FormRow>
 
 			<FormRow
-				label='Пароль (минимум 8 знаков)'
+				label='Пароль (минимум 8 знаков):'
 				error={errors?.password?.message}
 			>
 				<Input
@@ -77,10 +77,10 @@ function SignupForm() {
 					id='password'
 					disabled={isPendingSignup}
 					{...register('password', {
-						required: 'Это поле обязательное',
+						required: 'Это поле обязательное!',
 						minLength: {
 							value: 8,
-							message: 'Пароль должен быть не меньше 8 символов',
+							message: 'Пароль должен быть не меньше 8 символов!',
 						},
 						maxLength: 20,
 					})}
@@ -88,7 +88,7 @@ function SignupForm() {
 			</FormRow>
 
 			<FormRow
-				label='Повторите пароль'
+				label='Повторите пароль:'
 				error={errors?.passwordConfirm?.message}
 			>
 				<Input
@@ -96,14 +96,19 @@ function SignupForm() {
 					id='passwordConfirm'
 					{...register('passwordConfirm', {
 						validate: (value?: string) =>
-							value === getValues().password || 'Пароли не совпадают',
+							value === getValues().password || 'Пароли не совпадают!',
 					})}
 				/>
 			</FormRow>
 
 			<FormRow>
 				{/* type is an HTML attribute! */}
-				<Button variation='secondary' type='reset' disabled={isPendingSignup}>
+				<Button
+					variation='secondary'
+					type='reset'
+					disabled={isPendingSignup}
+					onClick={() => reset()}
+				>
 					Отмена
 				</Button>
 				<Button type='submit' disabled={isPendingSignup}>

@@ -8,7 +8,7 @@ export function useUpdateCabin() {
 	return useMutation({
 		mutationFn: updateCabin,
 		onSuccess: () => {
-			toast.success('Cabin updated')
+			toast.success('Номер обновлен')
 			queryClient.invalidateQueries({ queryKey: ['cabins'] })
 		},
 		onError: (error: Error) => toast.error(error.message),
