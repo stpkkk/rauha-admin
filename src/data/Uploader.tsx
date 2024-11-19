@@ -131,6 +131,7 @@ export function Uploader() {
 				padding: '8px',
 				borderRadius: '5px',
 				textAlign: 'center',
+				color: '#746583',
 			}}
 		>
 			<h3>DEV AREA</h3>
