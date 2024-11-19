@@ -11,7 +11,6 @@ export function useUpdateUser() {
 			queryClient.setQueryData(['user'], user?.user)
 
 			toast.success('Пользователь успешно обновлен!')
-			queryClient.invalidateQueries({ queryKey: ['user'] })
 		},
 		onError: err => toast.error(err.message),
 	})
