@@ -128,6 +128,9 @@ export async function getBookingsAfterDate(date: string) {
 	const { data, error } = await supabase
 		.from('bookings')
 		.select('created_at, totalPrice, extrasPrice')
+		//`gte`: Greater Than or Equal to (Больше или равно)
+		//`lte`: Less Than or Equal to (Меньше или равно)
+		//Вместе эти два метода создают запрос, который выбирает все записи, созданные в промежутке от переданной `date` до конца текущего дня.
 		.gte('created_at', date)
 		.lte('created_at', getToday({ end: true }))
 
