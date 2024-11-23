@@ -6,6 +6,7 @@ import Stats from './Stats'
 import { BookingType } from '../../types/booking'
 import { useSearchParams } from 'react-router-dom'
 import { useCabins } from '../cabins/useCabins'
+import SalesChart from './SalesChart'
 
 const StyledDashboardLayout = styled.div`
 	display: grid;
@@ -16,7 +17,7 @@ const StyledDashboardLayout = styled.div`
 const DashboardLayout = () => {
 	const [searchparams] = useSearchParams()
 	const { bookings, isPending: isPendingBookings } = useRecentBookings()
-	const { stays, confirmedStays, isPending: isPendingStays } = useRecentStays()
+	const { confirmedStays, isPending: isPendingStays } = useRecentStays()
 	const { cabins, isPending: isPendingCabins } = useCabins()
 
 	const numDays = !searchparams.get('last')
@@ -35,7 +36,7 @@ const DashboardLayout = () => {
 			/>
 			<div>Активность за сегодня</div>
 			<div>График прибывания в отеле</div>
-			<div>График скидок</div>
+			<SalesChart bookings={bookings as BookingType[]} numDays={numDays} />
 		</StyledDashboardLayout>
 	)
 }
