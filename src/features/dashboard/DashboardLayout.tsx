@@ -2,6 +2,10 @@ import styled from 'styled-components'
 import { useRecentBookings } from './useRecentBooking'
 import Spinner from '../../ui/Spinner'
 import { useRecentStays } from './useRecentStays'
+import Stats from './Stats'
+import { BookingType } from '../../types/booking'
+import { useSearchParams } from 'react-router-dom'
+import { useCabins } from '../cabins/useCabins'
 
 const StyledDashboardLayout = styled.div`
 	display: grid;
@@ -10,16 +14,25 @@ const StyledDashboardLayout = styled.div`
 	gap: 2.4rem;
 `
 const DashboardLayout = () => {
+	const [searchparams] = useSearchParams()
 	const { bookings, isPending: isPendingBookings } = useRecentBookings()
 	const { stays, confirmedStays, isPending: isPendingStays } = useRecentStays()
+	const { cabins, isPending: isPendingCabins } = useCabins()
 
-	if (isPendingBookings || isPendingStays) return <Spinner />
+	const numDays = !searchparams.get('last')
+		? 7
+		: Number(searchparams.get('last'))
 
-	console.log('stays:', stays)
+	if (isPendingBookings || isPendingStays || isPendingCabins) return <Spinner />
 
 	return (
 		<StyledDashboardLayout>
-			<div>Статистика</div>
+			<Stats
+				bookings={bookings as BookingType[]}
+				confirmedStays={confirmedStays}
+				numDays={numDays}
+				cabinCount={cabins?.length || 0}
+			/>
 			<div>Активность за сегодня</div>
 			<div>График прибывания в отеле</div>
 			<div>График скидок</div>
