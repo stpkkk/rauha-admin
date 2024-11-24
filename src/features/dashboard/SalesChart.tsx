@@ -13,6 +13,7 @@ import {
 import { useThemeToggle } from '../../context/ThemeContext'
 import { BookingType } from '../../types/booking'
 import { eachDayOfInterval, format, isSameDay, subDays } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 const StyledSalesChart = styled(DashboardBox)`
 	grid-column: 1 / -1;
@@ -71,7 +72,7 @@ function SalesChart({ bookings, numDays }: SalesChartType) {
 
 	const data = allDates.map(date => {
 		return {
-			label: format(date, 'MMM dd'),
+			label: format(date, 'MMM dd', { locale: ru }),
 			totalSales: bookings
 				.filter(booking => isSameDay(date, new Date(booking.created_at)))
 				.reduce((acc, cur) => acc + cur.totalPrice, 0),
@@ -97,7 +98,12 @@ function SalesChart({ bookings, numDays }: SalesChartType) {
 
 	return (
 		<StyledSalesChart>
-			<Heading as='h2'>Продажи</Heading>
+			<Heading as='h2'>
+				Продажи c{' '}
+				{format(allDates[0] || new Date(), 'd MMM yyyy', { locale: ru })}
+				&mdash;{' '}
+				{format(allDates[-1] || new Date(), 'd MMM yyyy', { locale: ru })}
+			</Heading>
 
 			<ResponsiveContainer height={300} width='100%'>
 				<AreaChart data={data}>
@@ -107,7 +113,7 @@ function SalesChart({ bookings, numDays }: SalesChartType) {
 						tickLine={{ stroke: colors.text }}
 					/>
 					<YAxis
-						unit='$'
+						unit='р'
 						tick={{ fill: colors.text }}
 						tickLine={{ stroke: colors.text }}
 					/>
