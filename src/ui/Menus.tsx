@@ -1,12 +1,25 @@
-import { createContext, ReactNode, useContext, useRef, useState } from 'react'
+import React, {
+	createContext,
+	ReactNode,
+	useContext,
+	useState,
+	useRef,
+} from 'react'
 import styled from 'styled-components'
-import { useClickOutside } from '../hooks/useClickOutside'
+import { useOutsideClick } from '../hooks/useOutsideClick'
 import { HiEllipsisVertical } from 'react-icons/hi2'
+
+type Position = {
+	x: number
+	y: number
+}
 
 type MenusContextType = {
 	openId: string
 	open: (id: string) => void
 	close: () => void
+	setPosition: React.Dispatch<React.SetStateAction<Position | null>>
+	position: Position | null
 }
 
 type MenuProps = {
@@ -22,11 +35,11 @@ type ButtonProps = {
 
 type ListProps = {
 	children: ReactNode
-	id?: string
+	id: string
 }
 
 type ToggleProps = {
-	id?: string
+	id: string
 }
 
 const Menu = styled.div`
@@ -94,25 +107,27 @@ const MenusContext = createContext<MenusContextType | null>(null)
 
 function Menus({ children }: MenuProps) {
 	const [openId, setOpenId] = useState('')
+	const [position, setPosition] = useState<Position | null>(null)
 
 	const close = () => setOpenId('')
 	const open = (id: string) => setOpenId(id)
 
 	return (
-		<MenusContext.Provider value={{ openId, close, open }}>
+		<MenusContext.Provider
+			value={{ openId, close, open, setPosition, position }}
+		>
 			<Menu>{children}</Menu>
 		</MenusContext.Provider>
 	)
 }
 
 function List({ id, children }: ListProps) {
-	const ref = useRef<HTMLUListElement>(null)
-
 	const context = useContext(MenusContext)
 	if (!context) throw new Error('List must be used within a Menus')
-
 	const { openId, close } = context
-	useClickOutside(ref, close)
+	const ref = useRef<HTMLUListElement>(null)
+
+	useOutsideClick(ref, close, false)
 
 	if (openId !== id) return null
 
@@ -122,11 +137,18 @@ function List({ id, children }: ListProps) {
 function Toggle({ id }: ToggleProps) {
 	const context = useContext(MenusContext)
 	if (!context) throw new Error('Toggle must be used within a Menus')
+	const { openId, close, open, setPosition } = context
 
-	const { open, close, openId } = context
+	function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+		e.stopPropagation()
 
-	function handleClick() {
-		openId === '' || openId !== id ? open(id!) : close()
+		const rect = e.currentTarget.getBoundingClientRect()
+		setPosition({
+			x: window.innerWidth - rect.width - rect.x,
+			y: rect.y + rect.height + 8,
+		})
+
+		openId === '' || openId !== id ? open(id) : close()
 	}
 
 	return (

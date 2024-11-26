@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { HiXMark } from 'react-icons/hi2'
 import styled from 'styled-components'
-import { useClickOutside } from '../hooks/useClickOutside'
+import { useOutsideClick } from '../hooks/useOutsideClick'
 
 type ModalProps = {
 	children: ReactNode
@@ -14,7 +14,7 @@ type OpenProps = {
 }
 
 type WindowProps = {
-	children: (closeModal: () => void) => ReactNode
+	children: (close: () => void) => React.ReactNode
 	name: string
 }
 
@@ -100,7 +100,7 @@ const Window = ({ children, name }: WindowProps) => {
 
 	if (!context) throw new Error('Window must be used within a Modal')
 	const { openName, close } = context
-	useClickOutside(modalRef, close)
+	useOutsideClick(modalRef, close)
 
 	if (name !== openName) return null
 
