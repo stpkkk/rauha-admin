@@ -10,7 +10,7 @@ const ThemeContext = createContext<ThemeContextType | null>(null)
 
 function ThemeProvider({ children }: { children: ReactNode }) {
 	const [isLightMode, setIsLightMode] = useLocalStorageState(
-		false,
+		window.matchMedia('(prefers-color-scheme: dark)').matches,
 		'isLightMode'
 	)
 
