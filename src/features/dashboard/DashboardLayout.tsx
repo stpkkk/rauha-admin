@@ -7,6 +7,7 @@ import { BookingType } from '../../types/booking'
 import { useSearchParams } from 'react-router-dom'
 import { useCabins } from '../cabins/useCabins'
 import SalesChart from './SalesChart'
+import DurationChart from './DurationChart'
 
 const StyledDashboardLayout = styled.div`
 	display: grid;
@@ -35,7 +36,7 @@ const DashboardLayout = () => {
 				cabinCount={cabins?.length || 0}
 			/>
 			<div>Активность за сегодня</div>
-			<div>График прибывания в отеле</div>
+			<DurationChart confirmedStays={confirmedStays} />
 			<SalesChart bookings={bookings as BookingType[]} numDays={numDays} />
 		</StyledDashboardLayout>
 	)
