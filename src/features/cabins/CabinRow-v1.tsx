@@ -139,7 +139,7 @@ function CabinRow({ cabin }: Props) {
 					<Modal.Window name='delete'>
 						{closeModal => (
 							<ConfirmDelete
-								resourceName='номер'
+								resourceName='домик'
 								disabled={isDeleting}
 								onConfirm={() => deleteCabinMutation(cabinId)}
 								onCloseModal={closeModal}

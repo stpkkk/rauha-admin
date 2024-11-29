@@ -33,14 +33,14 @@ function CabinTable() {
 
 	if (isPending) return <Spinner />
 	if (error) return 'An error has occurred: ' + error.message
-	if (!cabins?.length) return <Empty resourceName='номера' />
+	if (!cabins?.length) return <Empty resourceName='домики' />
 
 	return (
 		<Menus>
 			<Table columns='0.6fr 1.8fr 2.2fr 1fr 1fr 1fr'>
 				<Table.Header>
 					<div></div>
-					<div>Номер</div>
+					<div>Домик</div>
 					<div>Вместимость</div>
 					<div>Цена</div>
 					<div>Скидка</div>

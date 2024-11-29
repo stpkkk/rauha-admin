@@ -60,31 +60,31 @@ function MainNav() {
 				<li>
 					<StyledLink to='/dashboard'>
 						<HiOutlineHome />
-						<span> Home</span>
+						<span>Статистика</span>
 					</StyledLink>
 				</li>
 				<li>
 					<StyledLink to='/bookings'>
 						<HiOutlineCalendarDays />
-						<span>Bookings</span>
+						<span>Бронирования</span>
 					</StyledLink>
 				</li>
 				<li>
 					<StyledLink to='/cabins'>
 						<HiOutlineHomeModern />
-						<span>Cabins</span>
+						<span>Домики</span>
 					</StyledLink>
 				</li>
 				<li>
 					<StyledLink to='/users'>
 						<HiOutlineUsers />
-						<span>Users</span>
+						<span>Пользователи</span>
 					</StyledLink>
 				</li>
 				<li>
 					<StyledLink to='/settings'>
 						<IoSettingsOutline />
-						<span>Settings</span>
+						<span>Настройки</span>
 					</StyledLink>
 				</li>
 			</NavList>

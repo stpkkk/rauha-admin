@@ -39,7 +39,7 @@ function CabinTable() {
 		<Table role='table'>
 			<TableHeader role='row'>
 				<div></div>
-				<div>Номер</div>
+				<div>Домик</div>
 				<div>Вместимость</div>
 				<div>Цена</div>
 				<div>Скидка</div>

@@ -7,7 +7,7 @@ function AddCabin() {
 		<div>
 			<Modal>
 				<Modal.Open opens='cabin-form'>
-					{openModal => <Button onClick={openModal}>Добавить номер</Button>}
+					{openModal => <Button onClick={openModal}>Добавить домик</Button>}
 				</Modal.Open>
 
 				<Modal.Window name='cabin-form'>

@@ -100,9 +100,9 @@ function BookingRow({ booking }: BookingRowProps) {
 			<Stacked>
 				<span>
 					{isToday(new Date(startDate))
-						? 'Today'
+						? 'Сегодня'
 						: formatDistanceFromNow(startDate)}
-					&rarr; {numNights} night stay
+					&rarr; остались на {numNights} ноч
 				</span>
 				<span>
 					{format(new Date(startDate), 'MMM dd yyyy')} &mdash;

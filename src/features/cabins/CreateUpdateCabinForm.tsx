@@ -77,7 +77,7 @@ function CreateUpdateCabinForm({ cabinToUpdate, onCloseModal }: Props) {
 			type={onCloseModal ? 'modal' : 'regular'}
 			onSubmit={handleSubmit(onSubmit, onError)}
 		>
-			<FormRow label='Название номера' error={errors?.name?.message} id='name'>
+			<FormRow label='Название домика' error={errors?.name?.message} id='name'>
 				<Input
 					disabled={isPending}
 					type='text'
@@ -142,7 +142,7 @@ function CreateUpdateCabinForm({ cabinToUpdate, onCloseModal }: Props) {
 			</FormRow>
 
 			<FormRow
-				label='Описание для номера'
+				label='Описание для домика'
 				error={errors?.description?.message}
 				id='description'
 			>
@@ -156,7 +156,7 @@ function CreateUpdateCabinForm({ cabinToUpdate, onCloseModal }: Props) {
 				/>
 			</FormRow>
 
-			<FormRow label='Фото номера'>
+			<FormRow label='Фото домика'>
 				<FileInput
 					id='image'
 					accept='image/*'
@@ -179,7 +179,7 @@ function CreateUpdateCabinForm({ cabinToUpdate, onCloseModal }: Props) {
 					Отмена
 				</Button>
 				<Button variation='primary' size='medium' disabled={isPending}>
-					{isUpdateSession ? 'Редактировать номер' : 'Создать новый номер'}
+					{isUpdateSession ? 'Редактировать домик' : 'Создать новый домик'}
 				</Button>
 			</FormRow>
 		</Form>

@@ -98,9 +98,9 @@ function CabinRow({ cabin }: Props) {
 			)}
 			<Modal>
 				<Menus.Menu>
-					<Menus.Toggle id={cabinId?.toString()} />
+					<Menus.Toggle id={cabinId?.toString() || ''} />
 
-					<Menus.List id={cabinId?.toString()}>
+					<Menus.List id={cabinId?.toString() || ''}>
 						<Menus.Button
 							onClick={handleDuplicateCabin}
 							icon={<HiSquare2Stack />}
@@ -137,7 +137,7 @@ function CabinRow({ cabin }: Props) {
 					<Modal.Window name='delete'>
 						{closeModal => (
 							<ConfirmDelete
-								resourceName='номер'
+								resourceName='домик'
 								disabled={isDeleting}
 								onConfirm={() => deleteCabinMutation(cabinId)}
 								onCloseModal={closeModal}
