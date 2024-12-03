@@ -12,12 +12,19 @@ export type BookingType = {
 	observations?: string
 	isPaid?: boolean
 	status: string
-	guests: Array<{
-		fullName: string
-		email: string
-		homeTown?: string
-		passportId?: string
-	}>
+	guests:
+		| Array<{
+				fullName: string
+				email: string
+				homeTown?: string
+				passportId?: string
+		  }>
+		| {
+				fullName: string
+				email: string
+				homeTown?: string
+				passportId?: string
+		  }
 	cabins:
 		| Array<{
 				name: string
