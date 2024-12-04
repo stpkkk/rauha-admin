@@ -144,15 +144,15 @@ export function Uploader() {
 			>
 				Upload ALL sample data
 			</Button>
-			<p>Only run this only once!</p>
-			<p>
+			{/* <p>Only run this only once!</p> */}
+			{/* <p>
 				<em>(Cabin images need to be uploaded manually)</em>
-			</p>
+			</p> */}
 			<hr />
 			<Button onClick={uploadBookings} disabled={isLoading}>
 				Upload CURRENT bookings
 			</Button>
-			<p>You can run this every day you develop the app</p>
+			{/* <p>You can run this every day you develop the app</p> */}
 		</div>
 	)
 }
