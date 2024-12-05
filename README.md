@@ -53,6 +53,7 @@ I also build a **customer version** of this app, where guests can view and book 
 ## Technologies Used
 
 - **React** for the frontend.
+- **Typescript** for more clearer and more reliable code
 - **Supabase** for the database and real-time data updates.
 - **React Query** for data fetching and caching.
 - **React Router** for navigation.
