@@ -1,12 +1,13 @@
 <div align="center">
+  <div style="width: 90px; height: 90px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+    <img src="./public/logo-light.webp" alt="logo" width="100%" height="100%" style="object-fit: cover;">
+  </div>
 
-  <img src="./public/logo-light.png" alt="logo" width="90" height="auto">
-
-  <h3>
+  <h1>
     <a href="https://rauha-admin.netlify.app">
-      <h1>Rauha - admin</h1>
+      Rauha - admin
     </a>
-  </h3>
+  </h1>
 
   <hr>
 </div>
@@ -34,9 +35,9 @@ Welcome to <b>Rauha</b>! This is a hotel management web app, where hotel employe
 
 Check out the live admin app here: [Rauha - Admin](https://rauha-admin.netlify.app)
 
-## Customer Version
+<!-- ## Customer Version
 
-I also built a **customer version** of this app, where guests can view and book cabins, manage their bookings, and update their profiles. The repository is [here](https://github.com/stpkkk/rauha-admin), and the live site is [here](https://rauha-admin.netlify.app).
+I also build a **customer version** of this app, where guests can view and book cabins, manage their bookings, and update their profiles. The repository is [here](https://github.com/stpkkk/rauha-admin), and the live site is [here](https://rauha-admin.netlify.app). -->
 
 ## Key Features
 
