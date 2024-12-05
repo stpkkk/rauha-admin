@@ -1,6 +1,6 @@
 <div align="center">
   <div style="width: 90px; height: 90px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
-    <img src="./public/logo-light.webp" alt="logo" width="100%" height="100%" style="object-fit: cover;">
+    <img src="./public/logo-light.webp" alt="logo" width="90px" height="auto" style="object-fit: cover;">
   </div>
 
   <h1>
